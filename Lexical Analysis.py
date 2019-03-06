@@ -1,4 +1,3 @@
-#craigs an idiot
 import sys
 input_file = sys.stdin
 
