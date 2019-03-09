@@ -1,18 +1,18 @@
-##IMPORT 
+#Author : Craig Clephane
+
 execfile("LexicalAnalysis.py")
 
-### MAIN PROGRAM ### 
-#READS FILE 
+#Reads source file
 file = open("sourceFile.txt", "r")
 
-#LOOPS UNTIL END OF FILE, WILL AUTOMATICALLY RUN
+#Loop which 
 while True:
     tokenStream  =  getToken()         ##GRABS TOKEN STREAM 
     token        =  tokenStream[0]     ##GRABS TOKEN
     Line         =  tokenStream[1]     ##GRABS LINE OF TOKEN
     Column       =  tokenStream[2]     ##GRABS COLUMN OF TOKEN 
 
-    ##PRINTS TOKEN VISIUALY. COMMENT OVER IF NEEDED.
+    #Prints token visually, comment over if needed.
     print("%5d  %5d   %-14s" % (Line, Column, all_syms[token]), end='')     
 
     if token == TokenInteger: print("  %5d" % (tokenStream[3]))
@@ -20,6 +20,6 @@ while True:
     elif token == TokenIdent: print("  %s" % (tokenStream[3]))
     else: print("")
 
-    #ENDS LOOP IF AT END OF FILE.
+    #Ends loop if 'TokenEOF' is detected. 
     if token == TokenEOF:
         break

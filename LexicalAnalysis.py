@@ -1,6 +1,9 @@
+#Author : Craig Clephane 
+
 import sys
 
 execfile("tokentable.py")       #reads token file.
+execfile("errorhandling.py")       #reads errorhandling file.
 
 ##test
 input_file = sys.stdin
@@ -18,10 +21,6 @@ def string(start, errLine, errCol):
     text += Character
     grabNextCharacter()
     return TokenString, errLine, errCol, text
-
-def error(line, col, msg):
-    print(line, col, msg)
-    exit(1)
 
 ### GRABS THE NEXT VALUE FROM INPUT  ### 
 #Stores Character in variable, then shifts column, if the column is at the end of the row
@@ -73,6 +72,23 @@ def indentOrInt(errLine, errCol):
 
     return TokenIdent, errLine, errCol, Text
 
+#Needs FIXING
+def comments(errLine, errCol):
+    if grabNextCharacter() != '*':
+        print("hello")
+        return TokenDivide, errLine, errCol
+
+    grabNextCharacter()
+    while True:
+        if Character == '*':
+            if grabNextCharacter() == '/':   
+                grabNextCharacter()
+                return getToken()
+            elif len(Character) == 0:
+                error(errLine, errCol, "Error")
+            else:
+                grabNextCharacter()
+
 def getToken():
 
     while Character.isspace():
@@ -81,8 +97,13 @@ def getToken():
     errLine = Line
     errCol = Column
     if len(Character) == 0: return TokenEOF, errLine, errCol                            ##RETURN END OF FILE 
-    elif Character == '=': return follow('=', TokenEQ, TokenAssign, errLine, errCol)
+    elif Character == '/': return comments(errLine, errCol)
+    elif Character == '=': return follow ('=', TokenEQ, TokenAssign, errLine, errCol)
     elif Character == '<': return follow ('=', TokenLeq, TokenLess, errLine, errCol)
+    elif Character == '>': return follow ('=', TokenGEQ, TokenGTR, errLine, errCol)
+    elif Character == '!': return follow ('=', TokenEQ, TokenAssign, errLine, errCol)
+    elif Character == '&': return follow ('&', TokenAnd, TokenEOF, errLine, errCol)
+    elif Character == '|': return follow ('|', TokenOR, TokenEOF, errLine, errCol) 
     elif Character == '"': return stringLit(Character, errLine, errCol)
     elif Character in Symbols:
         sym = Symbols[Character]
