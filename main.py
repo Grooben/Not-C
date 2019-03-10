@@ -1,18 +1,21 @@
 #Author : Craig Clephane
+#Last edited : 10/03/2019
 
+#Main file for !C complier.
+
+#Imported files
 import LexicalAnalysis as lex
 
 #Reads source file
 lex.file = open("sourceFile.txt", "r")
 
-#Loop which 
 while True:
-    tokenStream  =  lex.getToken()         ##GRABS TOKEN STREAM 
-    token        =  tokenStream[0]     ##GRABS TOKEN
-    Line         =  tokenStream[1]     ##GRABS LINE OF TOKEN
-    Column       =  tokenStream[2]     ##GRABS COLUMN OF TOKEN 
+    tokenStream  =  lex.getToken()     #Grabs the token stream, which includes the type of token, column, line and variable if present.
+    token        =  tokenStream[0]     #Grabs token.
+    Line         =  tokenStream[1]     #Grabs line.
+    Column       =  tokenStream[2]     #Grabs column.
 
-    #Prints token visually, comment over if needed.
+    #Prints token visually, comment over when needed.
     print("%5d  %5d   %-14s" % (Line, Column, lex.tokentable.all_syms[token]), end='')     
 
     if token == lex.tokentable.TokenInteger: print("  %5d" % (tokenStream[3]))
