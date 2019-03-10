@@ -2,8 +2,8 @@
 
 import sys
 
-execfile("tokentable.py")       #reads token file.
-execfile("errorhandling.py")       #reads errorhandling file.
+import tokentable       #reads token file.
+import errorhandling    #reads errorhandling file.
 
 ##test
 input_file = sys.stdin
@@ -20,7 +20,7 @@ def string(start, errLine, errCol):
     text = ""
     text += Character
     grabNextCharacter()
-    return TokenString, errLine, errCol, text
+    return tokentable.TokenString, errLine, errCol, text
 
 ### GRABS THE NEXT VALUE FROM INPUT  ### 
 #Stores Character in variable, then shifts column, if the column is at the end of the row
@@ -49,7 +49,7 @@ def stringLit(start, errLine, errCol):
         text += Character
 
     grabNextCharacter()
-    return TokenString, errLine, errCol, text
+    return tokentable.TokenString, errLine, errCol, text
 
 def indentOrInt(errLine, errCol):
     is_number = True
@@ -65,18 +65,18 @@ def indentOrInt(errLine, errCol):
         if not is_number:
             error(errLine, errCol, "Invalid number: %s" % (Text))
         n = int(Text)
-        return TokenInteger, errLine, errCol, n
+        return tokentable.TokenInteger, errLine, errCol, n
 
-    if Text in keyWords:
-        return keyWords[Text], errLine, errCol
+    if Text in tokentable.keyWords:
+        return tokentable.keyWords[Text], errLine, errCol
 
-    return TokenIdent, errLine, errCol, Text
+    return tokentable.TokenIdent, errLine, errCol, Text
 
 #Needs FIXING
 def comments(errLine, errCol):
     if grabNextCharacter() != '*':
         print("hello")
-        return TokenDivide, errLine, errCol
+        return tokentable.TokenDivide, errLine, errCol
 
     grabNextCharacter()
     while True:
@@ -96,17 +96,17 @@ def getToken():
 
     errLine = Line
     errCol = Column
-    if len(Character) == 0: return TokenEOF, errLine, errCol                            ##RETURN END OF FILE 
+    if len(Character) == 0: return tokentable.TokenEOF, errLine, errCol                            ##RETURN END OF FILE 
     elif Character == '/': return comments(errLine, errCol)
-    elif Character == '=': return follow ('=', TokenEQ, TokenAssign, errLine, errCol)
-    elif Character == '<': return follow ('=', TokenLeq, TokenLess, errLine, errCol)
-    elif Character == '>': return follow ('=', TokenGEQ, TokenGTR, errLine, errCol)
-    elif Character == '!': return follow ('=', TokenEQ, TokenAssign, errLine, errCol)
-    elif Character == '&': return follow ('&', TokenAnd, TokenEOF, errLine, errCol)
-    elif Character == '|': return follow ('|', TokenOR, TokenEOF, errLine, errCol) 
+    elif Character == '=': return follow ('=', tokentable.TokenEQ, tokentable.TokenAssign, errLine, errCol)
+    elif Character == '<': return follow ('=', tokentable.TokenLeq, tokentable.TokenLess, errLine, errCol)
+    elif Character == '>': return follow ('=', tokentable.TokenGEQ, tokentable.TokenGTR, errLine, errCol)
+    elif Character == '!': return follow ('=', tokentable.TokenEQ, tokentable.TokenAssign, errLine, errCol)
+    elif Character == '&': return follow ('&', tokentable.TokenAnd, tokentable.TokenEOF, errLine, errCol)
+    elif Character == '|': return follow ('|', tokentable.TokenOR, tokentable.TokenEOF, errLine, errCol) 
     elif Character == '"': return stringLit(Character, errLine, errCol)
-    elif Character in Symbols:
-        sym = Symbols[Character]
+    elif Character in tokentable.Symbols:
+        sym = tokentable.Symbols[Character]
         grabNextCharacter()
         return sym, errLine, errCol
     else: return indentOrInt(errLine, errCol)
