@@ -1,7 +1,7 @@
 #Author : Craig Clephane
 #Last edited : 10/03/2019
 
-#Main file for !C complier.
+#Main file for !C compiler.
 
 #Imported files
 import LexicalAnalysis as lex

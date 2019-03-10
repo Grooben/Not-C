@@ -1,7 +1,7 @@
 #Author : Craig Clephane 
 #Last edited : 10/03/2019
 
-#File contains functions which support the lexical analysis of a complier (Phase one).
+#File contains functions which support the lexical analysis of a compiler (Phase one).
 
 #Imported files.
 import sys
