@@ -35,11 +35,12 @@ def lookup(name):
 # Insert - insert a name and return pointer to entry
 def insert(name, type, value = None):
     # Lookup function call to check for matches 
-
-    ## Must implement if true or false for lookup
+    if (lookup(name) == False):
         new_entry = Symbol(name, type, value)
         symbol_table.append(new_entry)
         print("Symbol appended: " + name)
+    else:
+         print("Symbol duplicate: " + name)
 
 
 # Set_attribute - associate an attribute with a given entry
