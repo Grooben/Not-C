@@ -37,6 +37,11 @@ class CallData:
     # Otherwise, it should be the datatype of the literal.
     typename = ""
 
+    def __init__(self, typename = "", value = "", isName = False):
+        self.value = value
+        self.isName = isName
+        self.typename = typename
+
 # Represents command calls (e.g. function calls) in the source code.
 # In assembly generation, each Call will be placed in `section .text`
 class Call:
@@ -51,6 +56,10 @@ class Call:
     # Remember to pass Python's "None" constant to represent skipped parameters
     data = []
 
+    def __init__(self, command = "", data = []):
+        self.command = command
+        self.data = data
+
 class Program:
     # List of data
     # Each element should contain a Data object
@@ -60,3 +69,6 @@ class Program:
     # Each element should contain a Call object
     calls = []
     
+    def __init__(self, programData = [], programCalls = []):
+        self.data = programData
+        self.calls = programCalls
