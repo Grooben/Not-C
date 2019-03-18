@@ -1,6 +1,8 @@
 # Author : Macauley Scullion
 # symtable.py 
 
+import errorhandling
+
 # Symbol class - Name, Type, and Attribute
 class Symbol:
     def __init__(self, name, type, value = None):
@@ -39,7 +41,7 @@ def insert(name, type, value = None):
         symbol_table.append(new_entry)
         print("Symbol appended: " + name + ' ' + type)
     else:
-         print("Symbol duplicate: " + name)
+         errorhandling.error(name, type)
 
 # Set_attribute - associate an attribute with a given entry
 def set_attribute(sym, value):
