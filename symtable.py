@@ -29,17 +29,17 @@ def lookup(name):
             if sym.name == name:
                 print("symbol found: name - " + name)
                 return sym
-        return
+        return False
 
 # Insert - insert a name and return pointer to entry
 def insert(name, type, value = None):
     # Lookup function call to check for matches 
-      
-    ## Must implement if true or false for lookup
+    if (lookup(name) == False):
         new_entry = Symbol(name, type, value)
         symbol_table.append(new_entry)
         print("Symbol appended: " + name)
-        print("\nNew entry from Lex: \nData Type: " + type + "\nIdentifier: " + name + "\n")
+    else:
+         print("Symbol duplicate: " + name)
 
 # Set_attribute - associate an attribute with a given entry
 def set_attribute(sym, value):
