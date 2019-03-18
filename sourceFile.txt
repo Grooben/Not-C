@@ -1,8 +1,9 @@
 /*
 	Example of a comment, this should be ignored by lexical analysis.
 	*/
-test = 9
-print(test, "\n")
+int x = 9
+print(x, "\n")
 print(69)
-	if test == 9
-		print("Hello world";
+	if x == 9
+		print("Hello world")
+a = 8;

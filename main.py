@@ -5,10 +5,11 @@
 
 #Imported files
 import LexicalAnalysis as lex
+import symtable
 
 #Reads source file
 lex.file = open("sourceFile.txt", "r")
-
+Idname =""
 while True:
     tokenStream  =  lex.getToken()     #Grabs the token stream, which includes the type of token, column, line and variable if present.
     token        =  tokenStream[0]     #Grabs token.
@@ -20,9 +21,12 @@ while True:
 
     if token == lex.tokentable.TokenInteger: print("  %5d" % (tokenStream[3]))
     elif token == lex.tokentable.TokenString: print(' "%s"' % (tokenStream[3]))
-    elif token == lex.tokentable.TokenIdent: print("  %s" % (tokenStream[3]))
+    elif token == lex.tokentable.TokenIdent: print("  %s" % (tokenStream[3])) 
     else: print("")
 
     #Ends loop if 'TokenEOF' is detected. 
     if token == lex.tokentable.TokenEOF:
         break
+
+#Example of printing table, remove when needed
+symtable.printTable()

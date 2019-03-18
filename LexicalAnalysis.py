@@ -7,6 +7,7 @@
 import sys
 import tokentable       #reads token file.
 import errorhandling    #reads errorhandling file.
+import symtable      #reads symbol table.
 input_file = sys.stdin
 
 #Dummy files.
@@ -14,6 +15,10 @@ Character = " "
 Column = 0
 Line = 1
 file = None
+
+Idname = ""
+
+
 
 #Grabs next character from the file, as well as shifting columns (Character) along everytime this function is called.
 #Once a new line is detected, the column (Character) will reset to the start of the line, and shift line.
@@ -59,6 +64,7 @@ def identifiersOrIntegers(errLine, errCol):
 
     is_number = True
     Text = ""
+    global Idname 
 
     #While loop to append the characters to a text string, also idenify whether the set of character is a digit or not. 
     while Character.isalnum() or Character == '_':
@@ -72,13 +78,19 @@ def identifiersOrIntegers(errLine, errCol):
         if not is_number:
             error(errLine, errCol, "Invalid number: %s" % (Text))
         n = int(Text)
+        #Push to si
+        if symtable.lookup(Idname) != Idname: 
+            pushToSymbolTable(Idname, 'INT')
+
         return tokentable.TokenInteger, errLine, errCol, n
 
     #If text matches a keyword, find keyword and return keyword token.
     if Text in tokentable.keyWords:
         return tokentable.keyWords[Text], errLine, errCol
 
-    #If text is not an integer or a keyword, return identifier token, with what the identifier is. 
+    #If text is not an integer or a keyword, return identifier token, with what the identifier is.
+    #Buffer Value
+    Idname = Text
     return tokentable.TokenIdent, errLine, errCol, Text
 
 #Function which identifies whether the string is a comment as well as return the divide token.
@@ -101,6 +113,10 @@ def commentsAndDiv(errLine, errCol):
                 error(errLine, errCol, "Error")
         else:
              grabNextCharacter()
+
+#Function which pushes nessceray components to the symbol table. 
+def pushToSymbolTable(name, type, value):
+    symtable.insert(name, type, value)
 
 #Get Token function calls the grab next character function and identifies what token the character is by a series of if statements.
 def getToken():
