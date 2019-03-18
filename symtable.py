@@ -37,7 +37,7 @@ def insert(name, type, value = None):
     if (lookup(name) == False):
         new_entry = Symbol(name, type, value)
         symbol_table.append(new_entry)
-        print("Symbol appended: " + name)
+        print("Symbol appended: " + name + ' ' + type)
     else:
          print("Symbol duplicate: " + name)
 
