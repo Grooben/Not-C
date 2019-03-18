@@ -29,7 +29,7 @@ def lookup(name):
             if sym.name == name:
                 print("symbol found: name - " + name)
                 return sym
-        return
+        return False
 
 
 # Insert - insert a name and return pointer to entry
