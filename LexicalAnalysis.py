@@ -18,7 +18,9 @@ file = None
 
 Idname = ""
 
-
+#Array containing tokens, as well as number of tokens
+TokenArray = []
+tokenCount = 0
 
 #Grabs next character from the file, as well as shifting columns (Character) along everytime this function is called.
 #Once a new line is detected, the column (Character) will reset to the start of the line, and shift line.
@@ -38,11 +40,14 @@ def follow(expect, ifyes, ifno, errLine, errCol):
 
     if grabNextCharacter() == expect:
         grabNextCharacter()
+        bufferTokens(ifyes)
         return ifyes, errLine, errCol
 
     if ifno == tokentable.TokenEOF:
         error(errLine,errCol, "Error within Follow")
 
+    #Store Buffer Token, and return the token
+    bufferTokens(ifno)
     return ifno, errLine, errCol
 
 #Function which reads the string, and returns a string token as well as the text. 
@@ -57,6 +62,16 @@ def stringLit(start, errLine, errCol):
         text += Character
 
     grabNextCharacter()
+  
+    #Add to symbol table whether an String has been decleared 
+    if tokenCount > 1:
+       findtok = tokenCount - 3
+
+       #Check if the token 'String' was found, if not do nothing
+       if TokenArray[findtok] == 32: 
+          pushToSymbolTable(Idname, 'String', text)
+
+    bufferTokens(tokentable.TokenString)
     return tokentable.TokenString, errLine, errCol, text
 
 #Function which handles identifiers and integers by running a series of if statements and while loops. 
@@ -78,18 +93,27 @@ def identifiersOrIntegers(errLine, errCol):
         if not is_number:
             error(errLine, errCol, "Invalid number: %s" % (Text))
         n = int(Text)
-        #Push to si
-        pushToSymbolTable(Idname, 'INT', n)
+        
+        #Add to symbol table whether an Int has been decleared 
+        if tokenCount > 1:
+            findtok = tokenCount - 3
 
+            #Check if the token 'Int' was found, if not do nothing
+            if TokenArray[findtok] == 31: 
+                pushToSymbolTable(Idname, 'Int', n)
+
+        bufferTokens(tokentable.TokenInteger)
         return tokentable.TokenInteger, errLine, errCol, n
 
     #If text matches a keyword, find keyword and return keyword token.
     if Text in tokentable.keyWords:
+        bufferTokens(tokentable.keyWords[Text])
         return tokentable.keyWords[Text], errLine, errCol
 
     #If text is not an integer or a keyword, return identifier token, with what the identifier is.
     #Buffer Value
     Idname = Text
+    bufferTokens(tokentable.TokenIdent)
     return tokentable.TokenIdent, errLine, errCol, Text
 
 #Function which identifies whether the string is a comment as well as return the divide token.
@@ -97,6 +121,7 @@ def commentsAndDiv(errLine, errCol):
 
     #If the character after '/' does not equal to a *, return token divide. 
     if grabNextCharacter() != '*':
+        bufferTokens(tokentable.TokenDivide)
         return tokentable.TokenDivide, errLine, errCol
 
     #Grab the next character, and if it equals to *, ignore the following text until '/' is identified again. 
@@ -117,6 +142,14 @@ def commentsAndDiv(errLine, errCol):
 def pushToSymbolTable(name, type, value):
     symtable.insert(name, type, value)
 
+def bufferTokens(token):
+    global TokenArray 
+    global tokenCount
+
+    TokenArray.append(token)
+    tokenCount += 1
+
+
 #Get Token function calls the grab next character function and identifies what token the character is by a series of if statements.
 def getToken():
 
@@ -129,11 +162,13 @@ def getToken():
     errCol = Column
     
     #If the number of characters is zero, return the end of file token, meaning there are no more tokens within the file.
-    if len(Character) == 0: return tokentable.TokenEOF, errLine, errCol      
+    if len(Character) == 0: 
+        bufferTokens(tokentable.TokenEOF)
+        return tokentable.TokenEOF, errLine, errCol      
     
     #If the character equals to the following Symbol, return the results from the respected function. 
     elif Character == '/': return commentsAndDiv(errLine, errCol)
-    elif Character == '=': return follow ('=', tokentable.TokenEQ, tokentable.TokenAssign, errLine, errCol)
+    elif Character == '=': return follow ('=', tokentable.TokenEQ, tokentable.TokenAssign, errLine, errCol) 
     elif Character == '<': return follow ('=', tokentable.TokenLeq, tokentable.TokenLess, errLine, errCol)
     elif Character == '>': return follow ('=', tokentable.TokenGEQ, tokentable.TokenGTR, errLine, errCol)
     elif Character == '!': return follow ('=', tokentable.TokenEQ, tokentable.TokenAssign, errLine, errCol)
@@ -145,6 +180,7 @@ def getToken():
     elif Character in tokentable.Symbols:
         sym = tokentable.Symbols[Character]
         grabNextCharacter()
+        bufferTokens(sym)
         return sym, errLine, errCol
     
     #If the character does not match anything from above, fun the indent or interger function. 

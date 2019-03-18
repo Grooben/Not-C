@@ -1,9 +1,10 @@
 /*
 	Example of a comment, this should be ignored by lexical analysis.
 	*/
-int x = 9
+Int x = 9
+String b = "hi"
 print(x, "\n")
 print(69)
 	if x == 9
 		print("Hello world")
-a = 8;
+Int a = 8;
