@@ -9,4 +9,5 @@ def error(line, col, msg):
     exit(1)
 
 def error(name, type):
-    print("Error: - Dup")
+    print("Error: - Dupilicate variable initialized")
+    exit(1)
