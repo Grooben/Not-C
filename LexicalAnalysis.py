@@ -79,8 +79,7 @@ def identifiersOrIntegers(errLine, errCol):
             error(errLine, errCol, "Invalid number: %s" % (Text))
         n = int(Text)
         #Push to si
-        if symtable.lookup(Idname) != Idname: 
-            pushToSymbolTable(Idname, 'INT')
+        pushToSymbolTable(Idname, 'INT', n)
 
         return tokentable.TokenInteger, errLine, errCol, n
 
