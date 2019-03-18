@@ -31,7 +31,6 @@ def lookup(name):
                 return sym
         return False
 
-
 # Insert - insert a name and return pointer to entry
 def insert(name, type, value = None):
     # Lookup function call to check for matches 
@@ -42,7 +41,6 @@ def insert(name, type, value = None):
     else:
          print("Symbol duplicate: " + name)
 
-
 # Set_attribute - associate an attribute with a given entry
 def set_attribute(sym, value):
     sym.value = value
@@ -50,3 +48,12 @@ def set_attribute(sym, value):
 # Get_attribute - get an attribute associated with an entry
 def get_attribute(sym):
     return sym.value
+
+# Print Symbol table
+def printTable():
+     for sym in symbol_table:
+         print("Item: \n""     Type:" + sym.type + "\n""     Name:"+ sym.name)
+    
+              
+
+        
