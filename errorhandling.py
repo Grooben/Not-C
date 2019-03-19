@@ -8,6 +8,12 @@ def error(line, col, msg):
     print(line, col, msg)
     exit(1)
 
+
+# Looking back on this i dont think function overloading is possible
 def error(name, type):
     print("Error: - Dupilicate variable initialized")
+    exit(1)
+
+def error(node):
+    print("Error: - node")
     exit(1)
