@@ -37,11 +37,13 @@ def processLine():
                 intercode.calls[-1].data.append(bridge.CallData(lex.tokentable.all_syms[lt["token"]].strip(), lt["attrib"].strip(), False))
         if leftId is not None and prevToken is lex.tokentable.TokenAssign:
             if lt["token"] == lex.tokentable.TokenString or lt["token"] == lex.tokentable.TokenInteger:
-                if symtable.lookup(leftId.strip()) is False:
+                if symtable.lookup(leftId.strip()) == False or symtable.lookup(leftId.strip()) == None:
                     print("adding identifier '{0}' to symtable".format(leftId))
                     datatype = lex.tokentable.all_syms[lt["token"]].strip()
                     symtable.insert(leftId.strip(), datatype, lt["attrib"])
                     intercode.data.append(bridge.Data(datatype, leftId.strip(), lt["attrib"]))
+                else:
+                    print("identifier {0} already exists in symtable".format(leftId.strip()))
         prevToken = lt["token"]
     lineTokens.clear()
 

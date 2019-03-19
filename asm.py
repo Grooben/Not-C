@@ -6,16 +6,16 @@ class String:
     strCount = 0
     def __init__(self, content=None, name=None):
         if content is None:
-            self.str = ""
+            self.data = ""
         else:
-            self.str = content
+            self.data = content
         if name is None:
             strCount += 1
             self.name = "string{0}".format(strCount)
         else:
             self.name = name
     def asm(self):
-        return "{0}:\tdb '{1}', 0\n{0}_LEN:\tequ $-{0}".format(self.name, self.str)
+        return "{0}:\tdb '{1}', 0\n{0}_LEN:\tequ $-{0}".format(self.name, self.data)
 
 
 class ProgramCode:
@@ -45,10 +45,12 @@ class ProgramCode:
         return ret
 
 class SysCallPrint:
-    def __init__(self, stringName):
-        self.symbols = []
-        self.symbols.append(stringName)
+    def __init__(self, paramNames=[]):
+        self.symbols = paramNames
     def asm(self):
-        return "mov eax, 4\nmov ebx, 1\nmov ecx, {0}\nmov edx, {0}_LEN\nint 80h\n".format(self.symbols[0])
+        ret = ""
+        for x in self.symbols:
+            ret = ret + "mov eax, 4\nmov ebx, 1\nmov ecx, {0}\nmov edx, {0}_LEN\nint 80h\n".format(x)
+        return ret
 
 
