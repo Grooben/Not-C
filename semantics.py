@@ -81,12 +81,13 @@ def type_check(leftnode, rightnode):
         return
 
     else:
-        module2.error(1)
-    
-    return
+        errorhandling.error(1)
 
+# Type checking function - will check if the variables/constants being assigned are of the same type
 def type_check(node):  
+    # Only if left handside is a variable otherwise run an error
     if (node.lhn.type == 'variable'):
+        # if left and right both return a symbol, match types otherwise run error
         if (symtable.lookup(node.lhn.value) != False and symtable.lookup(node.rhn.value) != False):
             if ((symtable.lookup(node.lhn.value)).type == 'Int' and (symtable.lookup(node.rhn.value)).type == 'Int'):
                 return
@@ -97,6 +98,7 @@ def type_check(node):
             else: 
                 errorhandling.error(node)
 
+        # if left returns a symbol and right is a constant, match types otherwise run error
         elif (symtable.lookup(node.lhn.value) != False and node.rhn.type == 'constant'):
             if ((symtable.lookup(node.lhn.value)).type == 'Int' and isinstance(node.rhn.value, int)):
                 return
@@ -109,9 +111,6 @@ def type_check(node):
 
     else:
         errorhandling.error(node)
-    
-    return
-
 
 ## Test node eval code - will have to remove all code from file to test - PLEASE DO THIS IN A SEPERATE FILE
 #module1.insert("X", "Int", 5)
