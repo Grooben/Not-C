@@ -1,2 +1,3 @@
 test = "hi"
-print(test, "\n");
+test2 = "a test"
+print(test, "this is ", test2, ".\n");
