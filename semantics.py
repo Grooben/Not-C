@@ -34,7 +34,7 @@ def eval(node):
 def equal(node):
     l = symtable.lookup(node.lhn.value) 
     r = eval(node.rhn)
-    type_check(node)
+    type_check_assign(node)
     symtable.set_attribute(l, r)
     return
 
@@ -42,28 +42,28 @@ def equal(node):
 def add(node):
     l = eval(node.lhn)
     r = eval(node.rhn)
-    type_check(l, r)
+    type_check_sum(l, r)
     return l + r
 
 # Sub function - returns left and right subtraction 
 def sub(node):
     l = eval(node.lhn)
     r = eval(node.rhn)
-    type_check(l, r)
+    type_check_sum(l, r)
     return l - r
 
 # mult function - returns left and right multiplication 
 def mult(node):
     l = eval(node.lhn)
     r = eval(node.rhn)
-    type_check(l, r)
+    type_check_sum(l, r)
     return l * r
 
 # div function - returns left and right division
 def div(node):
     l = eval(node.lhn)
     r = eval(node.rhn)
-    type_check(l, r)
+    type_check_sum(l, r)
     return l / r
 
 # var function - returns variable value after lookup 
@@ -76,15 +76,15 @@ def const(node):
     return node.value
 
 # Type checking function - will check if the variables/constants being summed are of the same type
-def type_check(leftnode, rightnode):  
+def type_check_sum(leftnode, rightnode):  
     if (isinstance(leftnode,int) and isinstance(rightnode,int)):
         return
 
     else:
-        errorhandling.error(1)
+        errorhandling.errornodetype(1)
 
 # Type checking function - will check if the variables/constants being assigned are of the same type
-def type_check(node):  
+def type_check_assign(node):  
     # Only if left handside is a variable otherwise run an error
     if (node.lhn.type == 'variable'):
         # if left and right both return a symbol, match types otherwise run error
@@ -96,7 +96,7 @@ def type_check(node):
                 return
 
             else: 
-                errorhandling.error(node)
+                errorhandling.errornodetype(node)
 
         # if left returns a symbol and right is a constant, match types otherwise run error
         elif (symtable.lookup(node.lhn.value) != False and node.rhn.type == 'constant'):
@@ -107,30 +107,31 @@ def type_check(node):
                 return
 
             else: 
-                errorhandling.error(node)
+                errorhandling.errornodetype(node)
 
     else:
-        errorhandling.error(node)
+        errorhandling.errornodetype(node)
 
 ## Test node eval code - will have to remove all code from file to test - PLEASE DO THIS IN A SEPERATE FILE
-#module1.insert("X", "Int", 5)
+#symtable.insert("X", "Int", 5)
 #nodel = Node("variable", "X")
 #noder = Node("constant", 5)
 #root = Node("divide", "+", nodel, noder)
 #print(eval(root))
-#module1.printTable()
+#symtable.printTable()
 
-#module1.insert("X", "Int", 5)
-#module1.insert("Y", "Int", 5)
+#symtable.insert("X", "Int", 5)
+#symtable.insert("Y", "Int", 5)
 #nodel = Node("variable", "X")
 #noder = Node("variable", "Y")
 #root = Node("multiply", "+", noder, nodel)
 #print(eval(root))
 
-#module1.insert("X", "Int", 5)
-#module1.insert("y", "Str", 5)
+#symtable.insert("X", "Int", 0)
+#symtable.insert("y", "Str", 6)
+#symtable.printTable()
 #nodel = Node("variable", "X")
 #noder = Node("variable", "y")
 #root = Node("equal", "+", nodel, noder)
 #print(eval(root))
-#module1.printTable()
+#symtable.printTable()

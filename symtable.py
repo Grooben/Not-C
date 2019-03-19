@@ -41,7 +41,7 @@ def insert(name, type, value = None):
         symbol_table.append(new_entry)
         print("Symbol appended: " + name + ' ' + type)
     else:
-         errorhandling.error(name, type)
+         errorhandling.error_dup(name, type)
 
 # Set_attribute - associate an attribute with a given entry
 def set_attribute(sym, value):
@@ -54,8 +54,6 @@ def get_attribute(sym):
 # Print Symbol table
 def printTable():
      for sym in symbol_table:
-         print("Item: \n""     Type:" + sym.type + "\n""     Name:"+ sym.name)
+         print("Item: \n""     Type:" + sym.type + "\n""     Name:"+ sym.name + "\n""     Value:", sym.value)
     
               
-
-        
