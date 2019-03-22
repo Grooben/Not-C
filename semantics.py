@@ -135,3 +135,15 @@ def type_check_assign(node):
 #root = Node("equal", "+", nodel, noder)
 #print(eval(root))
 #symtable.printTable()
+
+    def const(node):
+        return node.char
+
+    #by peter :)
+
+    
+    def PrintTree(self,i = 0): #tree print function
+        print(i* "  ",self.nodetype , " - \'" , self.char, "\'")
+        if self.lhn != None : self.lhn.PrintTree(i+1)
+        if self.rhn != None : self.rhn.PrintTree(i+1)
+
