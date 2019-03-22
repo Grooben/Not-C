@@ -1,8 +1,10 @@
 /*
 	Example of a comment, this should be ignored by lexical analysis.
 	*/
-test = 9
-print(test, "\n")
-print(69)
-	if test == 9
-		print("Hello world");
+Int x = 9;
+String b = "hi";
+print(x, "\n");
+print(69);
+	if x == 9
+		print("Hello world")
+Int a = 8;
