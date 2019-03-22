@@ -7,18 +7,46 @@ assignment = "assignment"
 variable = "variable"
 operator = "operator"
 
-
-#parse tree generation.
-#def __init__(self, nodetype, char, lhn = None, rhn = None):
 from semantics import Node
 
+ParseTrees = []
+
+token = []       #test data
+token.append(Node(variable, "c"))
+token.append(Node(assignment,'='))
+token.append(Node(variable, "x"))
+token.append(Node(operator, "-"))
+token.append(Node(variable, "y"))
 
 
 
-root = Node(assignment,'=')
-root.lhn = Node("variable", "c")
-root.rhn = Node("operator", "-")
-root.rhn.rhn = Node("variable", "x")
-root.rhn.lhn = Node("variable", "y")
+def nodeIndex(tokens, criteria):
+    i = 0
+    for Node in tokens:
+        if Node.nodetype == criteria: return i
+        i +=1
+    return None
 
-root.PrintTree()
+#assignment sorting:------------------------------------------
+    
+def treeGen(tokens):
+
+    if nodeIndex(tokens,assignment) != None :
+        root = tokens[nodeIndex(tokens,assignment)]
+        del tokens[nodeIndex(tokens,assignment)]
+
+        root.lhn = tokens[nodeIndex(tokens,variable)]
+        del tokens[nodeIndex(tokens,variable)] 
+
+
+    root.PrintTree()
+
+
+treeGen(token)
+
+#-------------------------------------------------------------
+
+
+
+
+
