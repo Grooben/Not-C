@@ -12,9 +12,13 @@ operator = "operator"
 #def __init__(self, nodetype, char, lhn = None, rhn = None):
 from semantics import Node
 
-root = Node(assignment,'=')
-root.lhn = Node("variable", "x")
-root.rhn = Node("operator", "-")
 
+
+
+root = Node(assignment,'=')
+root.lhn = Node("variable", "c")
+root.rhn = Node("operator", "-")
+root.rhn.rhn = Node("variable", "x")
+root.rhn.lhn = Node("variable", "y")
 
 root.PrintTree()

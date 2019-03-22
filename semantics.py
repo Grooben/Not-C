@@ -54,18 +54,10 @@ class Node:
     def const(node):
         return node.char
 
-    #by peter :) prints all node information not pretty but its enough for testing.
+    #by peter :)
 
-    def PrintTree(self):
-        print(self.nodetype , " - \'", self.char, "\'\n left Node- ")
-        if self.lhn == None : print(self.lhn)
-        else : self.lhn.PrintTree()
-
-        print("right node- ")
-
-        if self.rhn == None : print(self.rhn)
-        else : self.rhn.PrintTree()
-
-        print("\n")
     
-
+    def PrintTree(self,i = 0): #tree print function
+        print(i* "  ",self.nodetype , " - \'" , self.char, "\'")
+        if self.lhn != None : self.lhn.PrintTree(i+1)
+        if self.rhn != None : self.rhn.PrintTree(i+1)
