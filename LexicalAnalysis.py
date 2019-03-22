@@ -1,5 +1,5 @@
 #Author : Craig Clephane 
-#Last edited : 10/03/2019
+#Last edited : 22/03/2019
 
 #File contains functions which support the lexical analysis of a compiler (Phase one).
 
@@ -44,7 +44,7 @@ def follow(expect, ifyes, ifno, errLine, errCol):
         return ifyes, errLine, errCol
 
     if ifno == tokentable.TokenEOF:
-        error(errLine,errCol, "Error within Follow")
+        followUnrecognized(errLine ,errCol)
 
     #Store Buffer Token, and return the token
     bufferTokens(ifno)
@@ -57,8 +57,10 @@ def stringLit(start, errLine, errCol):
 
     #Loop appends characters onto the text if the character does not equal to the first character (")
     while grabNextCharacter() != start:
+        if len(Character) == 0:
+            endOfFile2(errLine, errCol)
         if Character == '\n':
-            error(errLine, errCol, "EOL while scanning string literal")
+           endOfLine(errLine, errCol)
         text += Character
 
     grabNextCharacter()
@@ -91,7 +93,7 @@ def identifiersOrIntegers(errLine, errCol):
     #If the text is a digit, convert to a number, and return integer token. 
     if Text[0].isdigit():
         if not is_number:
-            error(errLine, errCol, "Invalid number: %s" % (Text))
+            invalidNumber(errLine, errCol, text)
         n = int(Text)
         
         #Add to symbol table whether an Int has been decleared 
@@ -134,7 +136,7 @@ def commentsAndDiv(errLine, errCol):
                 return getToken()
 
         elif len(Character) == 0:
-                error(errLine, errCol, "Error")
+                endOfFile(errLine, errCol)
         else:
              grabNextCharacter()
 
