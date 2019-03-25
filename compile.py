@@ -53,7 +53,7 @@ for x in intermediate.calls:
 outputFilename = "output.asm"
 
 resultAsm = outputProg.asm()
-if resultAsm is "":
+if resultAsm == "":
     print("There was an error compiling the code.\n")
 else:
     outf = open(outputFilename, "w")
