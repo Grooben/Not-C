@@ -37,17 +37,28 @@ def processLine():
     for lt in lineTokens:
         # Case: This token is an Identifier.
         # If no left-hand side identifier has been found yet, assign this as one.
-        if lt["token"] == lex.tokentable.TokenIdent and leftId is None:
-            leftId = lt["attrib"]
-            print("found left-hand side identifier: {0}.".format(leftId))
+        # TODO: Had to consider Keywords (e.g. 'print', 'if') as identifiers too,
+        # this should be changed at some point to avoid confusion.
+        if lt["token"] == lex.tokentable.TokenIdent or lex.tokentable.all_syms[lt["token"]].find("Keyword") == 0:
+            if leftId is None:
+                # Either:
+                # Assign keyword name
+                if lex.tokentable.all_syms[lt["token"]].find("Keyword") == 0:
+                    leftId = lex.tokentable.all_syms[lt["token"]].replace("Keyword", "").lower()
+                # Assign identifier name
+                else:
+                    leftId = lt["attrib"]
+                print("found left-hand side identifier: {0}.".format(leftId))
 
-        # Case: A left-hand side identifier has been found in the previous iteration, and the current token is a left parenthesis.
+        # Case: A left-hand side identifier (OR a keyword) has been found in the previous iteration, and the current token is a left parenthesis.
         # This indicates that there is a command call on this line. Set isCall to indicate that.
-        # The left-hand side identifier therefore contains the command name, which gets added to intermediate code.
-        if prevToken is lex.tokentable.TokenIdent and leftId is not None and lt["token"] is lex.tokentable.TokenLparen:
-            isCall = True
-            print("Found function call '{0}'".format(leftId))
-            intercode.calls.append(bridge.Call(leftId.strip()))
+        # The left-hand side identifier/keyword therefore contains the command name, which gets added to intermediate code.
+        if prevToken is not None:
+            if prevToken == lex.tokentable.TokenIdent or lex.tokentable.all_syms[prevToken].find("Keyword") == 0:
+                if leftId is not None and lt["token"] == lex.tokentable.TokenLparen:
+                    isCall = True
+                    print("Found function call '{0}'".format(leftId))
+                    intercode.calls.append(bridge.Call(leftId.strip()))
         # Case: A command call has been found prior to this iteration, and an identifier has been found in this iteration.
         # Add this identifier to this call's data list in the intermediate code.
         elif isCall and lt["token"] is lex.tokentable.TokenIdent:
