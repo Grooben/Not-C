@@ -17,6 +17,8 @@ token.append(Node(assignment,'='))
 token.append(Node(variable, "x"))
 token.append(Node(operator, "-"))
 token.append(Node(variable, "y"))
+token.append(Node(operator, "+"))
+token.append(Node(variable, "z"))
 
 
 
@@ -27,19 +29,35 @@ def nodeIndex(tokens, criteria):
         i +=1
     return None
 
+
+
 #assignment sorting:------------------------------------------
     
 def treeGen(tokens):
 
-    if nodeIndex(tokens,assignment) != None :
+    if nodeIndex(tokens,assignment) != None :#checks if list contains assignment operator
         root = tokens[nodeIndex(tokens,assignment)]
-        del tokens[nodeIndex(tokens,assignment)]
+        del tokens[nodeIndex(tokens,assignment)]#sets assignment as root.
 
         root.lhn = tokens[nodeIndex(tokens,variable)]
         del tokens[nodeIndex(tokens,variable)] 
 
+        temp = root#tree save point for recursive programs.
+        while nodeIndex(tokens,operator) != None :#recursivly builds right of tree.
+            temp.rhn=tokens[nodeIndex(tokens,operator)]
+            del tokens[nodeIndex(tokens,operator)]
+            
+            temp= temp.rhn#rebase temp for recursion using object refrence.
+            temp.lhn=tokens[nodeIndex(tokens,variable)]
+            del tokens[nodeIndex(tokens,variable)]
 
-    root.PrintTree()
+        temp.rhn=tokens[nodeIndex(tokens,variable)]
+        del tokens[nodeIndex(tokens,variable)]
+
+        if tokens:
+            print("list not empty")#todo update to proper error handeling.
+
+    root.PrintTree()#prints completed tree.
 
 
 treeGen(token)
