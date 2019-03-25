@@ -19,8 +19,10 @@ outputProg = asm.ProgramCode()
 
 # Add static data from intermediate code to program container
 for x in intermediate.data:
-    if x.typename is "String":
+    if x.typename == "String":
         outputProg.addData(asm.String(x.value, x.identifier))
+    elif x.typename == "Integer":
+        outputProg.addData(asm.Integer(x.value, x.identifier))
 
 # Add commands from intermediate code to program container
 for x in intermediate.calls:
@@ -39,8 +41,10 @@ for x in intermediate.calls:
             literalCount = literalCount + 1
             # Unique label for this data
             dataname = "_constant_{0}_{1}".format(x.command, literalCount)
-            if y.typename is "String": 
+            if y.typename == "String": 
                 outputProg.addData(asm.String(y.value, dataname))
+            elif y.typename == "Integer":
+                outputProg.addData(asm.Integer(y.value, dataname))
             # Add this data's unique label to the syscall symbol list 
             syscall.symbols.append(dataname)
             print("Added syscall for {0} command with {1} symbols.".format(x.command, len(syscall.symbols)))
