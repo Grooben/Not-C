@@ -17,6 +17,21 @@ class String:
     def asm(self):
         return "{0}:\tdb '{1}', 0\n{0}_LEN:\tequ $-{0}".format(self.name, self.data)
 
+class Integer:
+    intCount = 0
+    def __init__(self, value=None, name=None):
+        if value is None:
+            self.data = ""
+        else:
+            self.data = value
+        if name is None:
+            intCount += 1
+            self.name = "int{0}".format(intCount)
+        else:
+            self.name = name
+    def asm(self):
+        return "{0}:\tdd {1}".format(self.name, self.data)
+
 
 class ProgramCode:
     def __init__(self):
