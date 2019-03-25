@@ -54,7 +54,11 @@ for x in intermediate.calls:
     # Add the syscall to the program's command list
     outputProg.addCall(syscall)
 
-outputFilename = "output.asm"
+# Use provided filename or use default
+if len(sys.argv) > 2:
+	outputFilename = sys.argv[2]
+else:
+	outputFilename = "output.asm"
 
 resultAsm = outputProg.asm()
 if resultAsm == "":
