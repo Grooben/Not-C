@@ -1,3 +1,8 @@
-test = "hi"
-test2 = "a test"
-print(test, "this is ", test2, ".\n");
+/*
+	Example of a comment, this should be ignored by lexical analysis.
+	*/
+test = 9
+print(test, "\n")
+print(69)
+	if test == 9
+		print("Hello world");
