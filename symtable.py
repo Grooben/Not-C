@@ -1,6 +1,8 @@
 # Author : Macauley Scullion
 # symtable.py 
 
+import errorhandling
+
 # Symbol class - Name, Type, and Attribute
 class Symbol:
     def __init__(self, name, type, value = None):
@@ -29,18 +31,17 @@ def lookup(name):
             if sym.name == name:
                 print("symbol found: name - " + name)
                 return sym
-        return
-
+        return False
 
 # Insert - insert a name and return pointer to entry
 def insert(name, type, value = None):
     # Lookup function call to check for matches 
-
-    ## Must implement if true or false for lookup
+    if (lookup(name) == False):
         new_entry = Symbol(name, type, value)
         symbol_table.append(new_entry)
-        print("Symbol appended: " + name)
-
+        print("Symbol appended: " + name + ' ' + type)
+    else:
+         errorhandling.error_dup(name, type)
 
 # Set_attribute - associate an attribute with a given entry
 def set_attribute(sym, value):
@@ -49,3 +50,10 @@ def set_attribute(sym, value):
 # Get_attribute - get an attribute associated with an entry
 def get_attribute(sym):
     return sym.value
+
+# Print Symbol table
+def printTable():
+     for sym in symbol_table:
+         print("Item: \n""     Type:" + sym.type + "\n""     Name:"+ sym.name + "\n""     Value:", sym.value)
+    
+              
