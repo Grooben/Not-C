@@ -7,7 +7,12 @@ assignment = "assignment"
 variable = "variable"
 operator = "operator"
 
-from semantics import Node
+class Node: 
+    def __init__(self, type, value, lhn = None, rhn = None):
+        self.type = type
+        self.value = value 
+        self.lhn = lhn
+        self.rhn = rhn
 
 ParseTrees = []
 
@@ -64,7 +69,7 @@ treeGen(token)
 
 #-------------------------------------------------------------
 
-
-
-
-
+def PrintTree(self,i = 0): #tree print function
+    print(i* "  ",self.nodetype , " - \'" , self.value, "\'")
+    if self.lhn != None : self.lhn.PrintTree(i+1)
+    if self.rhn != None : self.rhn.PrintTree(i+1)

@@ -1,20 +1,9 @@
 # Author : Macauley Scullion
-# Interpreter version
 
 #Import symtable functions
 import symtable
 import errorhandling
-
-
-# Class defintion - will be removed, require by syntax and functions can simply be imported and called
-
-class Node: 
-    def __init__(self, type, value, lhn = None, rhn = None):
-        self.type = type
-        self.value = value 
-        self.lhn = lhn
-        self.rhn = rhn
-
+from parseTreeGeneration import Node 
 
 # Node evaluation function - will evaluate the root node or passed node through a swither and call function
 def eval(node):
@@ -135,15 +124,4 @@ def type_check_assign(node):
 #root = Node("equal", "+", nodel, noder)
 #print(eval(root))
 #symtable.printTable()
-
-    def const(node):
-        return node.char
-
-    #by peter :)
-
-    
-    def PrintTree(self,i = 0): #tree print function
-        print(i* "  ",self.nodetype , " - \'" , self.char, "\'")
-        if self.lhn != None : self.lhn.PrintTree(i+1)
-        if self.rhn != None : self.rhn.PrintTree(i+1)
 
