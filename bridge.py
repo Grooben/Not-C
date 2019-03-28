@@ -6,13 +6,13 @@
 # In assembly generation, this will be declared in `section .data`
 class Data:
     # Datatype (e.g. String, Integer, Bool)
-    typename = ""
+    # typename = ""
 
     # The identifier for this piece of data - normally this will be the constant/variable name.
-    identifier = ""
+    # identifier = ""
 
     # The value of this data - in Python, keep this a string, even if it's numerical data.
-    value = ""
+    # value = ""
 
     def __init__(self, dataType: str, dataIdentifier: str, dataValue: str):
         self.typename = dataType
@@ -26,16 +26,16 @@ class CallData:
     # Value of this data.
     # Important: for a variable/constant reference, this should be the Data identifier.
     # For a literal, this should of course store the value of the literal.
-    value = ""
+    # value = ""
 
     # True if value points to a variable/constant name,
     # False if value stores a literal.
-    isName = False
+    # isName = False
 
     # Datatype of this data.
     # This can stay empty if isName is True.
     # Otherwise, it should be the datatype of the literal.
-    typename = ""
+    # typename = ""
 
     def __init__(self, typename = "", value = "", isName = False):
         self.value = value
@@ -48,27 +48,35 @@ class Call:
     # Name of the command
     # This will usually be a function name (e.g. "print"),
     # but can also be a macro or built-in expression.
-    command = ""
+    # command = ""
 
     # Data to be passed into the command. Each element is a CallData object.
     # This will usually be the parameter list for a function call.
     # Parameter order is critical for this.
     # Remember to pass Python's "None" constant to represent skipped parameters
-    data = []
+    # data = []
 
-    def __init__(self, command = "", data = []):
-        self.command = command
-        self.data = data
+    def __init__(self, commandName = "", dataList = []):
+        self.command = commandName
+        self.data = dataList
+    def addData(self, dataObj):
+        self.data.append(dataObj)
+    def dataCount(self):
+        return len(self.data)
 
 class Program:
     # List of data
     # Each element should contain a Data object
-    data = []
+    # data = []
 
     # List of command calls
     # Each element should contain a Call object
-    calls = []
+    # calls = []
     
     def __init__(self, programData = [], programCalls = []):
         self.data = programData
         self.calls = programCalls
+    def callCount(self):
+    	return len(self.calls)
+    def dataCount(self):
+        return len(self.data)

@@ -58,16 +58,26 @@ def processLine():
                 if leftId is not None and lt["token"] == lex.tokentable.TokenLparen:
                     isCall = True
                     print("Found function call '{0}'".format(leftId))
-                    intercode.calls.append(bridge.Call(leftId.strip()))
+                    newCall = bridge.Call(leftId.strip(), [])
+                    intercode.calls.append(newCall)
+                    print("Added new function call. Checking data count and call count: {0} calls, {1} data in this new call".format(intercode.callCount(), intercode.calls[-1].dataCount()))
         # Case: A command call has been found prior to this iteration, and an identifier has been found in this iteration.
         # Add this identifier to this call's data list in the intermediate code.
-        elif isCall and lt["token"] is lex.tokentable.TokenIdent:
-            intercode.calls[-1].data.append(bridge.CallData(symtable.lookup(lt["attrib"].strip()).type.strip(), lt["attrib"].strip(), True))
+        if isCall == True and lt["token"] == lex.tokentable.TokenIdent:
+            print("Adding data")
+            numCalls = intercode.callCount()
+            intercode.calls[numCalls-1].addData(bridge.CallData(symtable.lookup(lt["attrib"].strip()).type.strip(), lt["attrib"].strip(), True))
         # Case: A command call has been found prior to this iteration. No identifier has been found.
         # Check for data constants/literals, and add them to the call's data list in the intermediate code.
-        elif isCall:
-            if lt["token"] is lex.tokentable.TokenInteger or lt["token"] is lex.tokentable.TokenString:
-                intercode.calls[-1].data.append(bridge.CallData(lex.tokentable.all_syms[lt["token"]].strip(), lt["attrib"].strip(), False))
+        elif isCall == True and lt["token"] == lex.tokentable.TokenRparen:
+            isCall = False
+            print("'{0}' call finished ('{1}' parameters passed)".format(intercode.calls[-1].command, len(intercode.calls[-1].data)))
+        elif isCall == True:
+            if lt["token"] == lex.tokentable.TokenInteger or lt["token"] == lex.tokentable.TokenString:
+                numCalls = intercode.callCount()
+                print("Number of calls: {0}".format(numCalls))
+                print("Number of arguments in current call: {0}".format(intercode.calls[intercode.callCount()-1].dataCount()))
+                intercode.calls[numCalls-1].addData(bridge.CallData(lex.tokentable.all_syms[lt["token"]].strip(), lt["attrib"], False))
 
         # Case: A left-hand side identifier has been found, and the previous token was an assignment operator.
         # Assign value to identifier. If the identifier can't be found in the symbol table, add it.
@@ -119,6 +129,7 @@ def generate(filename: str):
         # Reached end of line. Process the last scanned line.
         if line > prevLine or token == lex.tokentable.TokenEOF:
             processLine()
+            lineTokens = []
             prevLine = line
             print("processing line")
             print(len(intercode.data))
