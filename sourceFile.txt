@@ -1,6 +1,4 @@
-/*
-	Example of a comment, this should be ignored by lexical analysis.
-	*/
+Int c = 23;
 Int x = 9;
 String b = "hi";
 print(x, "\n");
