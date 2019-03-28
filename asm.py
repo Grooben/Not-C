@@ -40,6 +40,9 @@ class ProgramCode:
     def addData(self, asmData):
         self.data[asmData.name] = asmData
     def addCall(self, asmCall):
+        print("ASM: Adding call")
+        for sym in asmCall.symbols:
+            print("\t\t parameter: {0}".format(sym))
         self.calls.append(asmCall)
     def asm(self):
         ret = ""
