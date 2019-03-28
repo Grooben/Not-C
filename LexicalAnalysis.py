@@ -30,9 +30,12 @@ def grabNextCharacter():
 
     Character = file.read(1)      
     Column += 1       
-    if Character == '\n':       
-        Line += 1
-        Column = 0
+    if Character == '\n':   
+        Line += 1 
+        Column = 0 
+        ############################################## SHOULD BE RETURNING TOKEN TO MAIN.PY HERE, BUT THIS IS CALLED SEVERAL TIMES WITHIN FILES ITS SELF 
+        #return tokentable.TokenEOL 
+
     return Character
 
 #Function which identifies the following character after a previous character and returns the correct token, based on the parameters. 

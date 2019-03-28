@@ -10,7 +10,7 @@ TokenGTR, TokenGEQ, TokenEQ, TokenNeg, TokenAssign,             \
 TokenAND, TokenOR, TokenIF, TokenELSE, TokenWHILE,              \
 TokenPrint, TokenPutc, TokenLparen, TokenRparen, TokenLbrace,   \
 TokenRbrace, TokenSemi, TokenComma, TokenIdent, TokenInteger,   \
-TokenString, TokenINT, TokenSTRING = range(33)
+TokenString, TokenINT, TokenSTRING, TokenEOL = range(34)
 
 #Must remain the same order - do NOT change without authors permission 
 all_syms = ['End_of_File', 'OMulti', 'ODivide','OMod', 'OAdd', 
@@ -19,8 +19,16 @@ all_syms = ['End_of_File', 'OMulti', 'ODivide','OMod', 'OAdd',
             'OAnd', 'Oor', 'KeywordIF', 'KeywordELSE', 'KeywordWHILE', 
             'KeywordPRINT', 'KeywordPutc', 'LeftParen', 'RightPaaren', 'LeftBrace', 
             'RightBrace', 'SemiColon', 'Comma', 'Identifier', 'Integer', 
-            'String', 'KeywordInt', 'KeywordSTRING']
+            'String', 'KeywordInt', 'KeywordSTRING', 'EOL']
 
+categories = ['EOF', 'Operator', 'Operator', 'Operator', 'Operator',
+              'Operator', 'Operator', 'Operator', 'Operator', 'Operator',
+              'Operator', 'Operator', 'Operator', 'Operator', 'Assignment',
+              'Operator', 'Operator', 'Conditional', 'Conditional', 'Conditional', 
+              'Function', 'Punctuator', 'Punctuator', 'Punctuator', 'Punctuator',
+              'Punctuator','StatementTerminator','Punctuator','Variable','Variable',
+              'Variable', 'Operator', 'Operator', 'EOL']
+    
 Symbols = { '{': TokenLbrace,
             '}': TokenRbrace,
             '(': TokenLparen,
