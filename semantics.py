@@ -10,10 +10,23 @@ import errorhandling
 
 class Node: 
     def __init__(self, type, value, lhn = None, rhn = None):
+        self.catagory = None
         self.type = type
-        self.value = value 
+        self.value = value
         self.lhn = lhn
         self.rhn = rhn
+
+    def __init__( self,catagory, type, value= None, lhn = None, rhn = None):
+        self.catagory = catagory
+        self.type = type
+        self.value = value
+        self.lhn = lhn
+        self.rhn = rhn
+    
+    def PrintTree(self,i = 0): #tree print function
+        print(i* "  ",self.type , " - \'" , self.value, "\'")
+        if self.lhn != None : self.lhn.PrintTree(i+1)
+        if self.rhn != None : self.rhn.PrintTree(i+1)
 
 
 # Node evaluation function - will evaluate the root node or passed node through a swither and call function
@@ -112,38 +125,32 @@ def type_check_assign(node):
     else:
         errorhandling.errornodetype(node)
 
-## Test node eval code - will have to remove all code from file to test - PLEASE DO THIS IN A SEPERATE FILE
-#symtable.insert("X", "Int", 5)
-#nodel = Node("variable", "X")
-#noder = Node("constant", 5)
-#root = Node("divide", "+", nodel, noder)
-#print(eval(root))
-#symtable.printTable()
+    ## Test node eval code - will have to remove all code from file to test - PLEASE DO THIS IN A SEPERATE FILE
+    #symtable.insert("X", "Int", 5)
+    #nodel = Node("variable", "X")
+    #noder = Node("constant", 5)
+    #root = Node("divide", "+", nodel, noder)
+    #print(eval(root))
+    #symtable.printTable()
 
-#symtable.insert("X", "Int", 5)
-#symtable.insert("Y", "Int", 5)
-#nodel = Node("variable", "X")
-#noder = Node("variable", "Y")
-#root = Node("multiply", "+", noder, nodel)
-#print(eval(root))
+    #symtable.insert("X", "Int", 5)
+    #symtable.insert("Y", "Int", 5)
+    #nodel = Node("variable", "X")
+    #noder = Node("variable", "Y")
+    #root = Node("multiply", "+", noder, nodel)
+    #print(eval(root))
 
-#symtable.insert("X", "Int", 0)
-#symtable.insert("y", "Str", 6)
-#symtable.printTable()
-#nodel = Node("variable", "X")
-#noder = Node("variable", "y")
-#root = Node("equal", "+", nodel, noder)
-#print(eval(root))
-#symtable.printTable()
+    #symtable.insert("X", "Int", 0)
+    #symtable.insert("y", "Str", 6)
+    #symtable.printTable()
+    #nodel = Node("variable", "X")
+    #noder = Node("variable", "y")
+    #root = Node("equal", "+", nodel, noder)
+    #print(eval(root))
+    #symtable.printTable()
 
     def const(node):
         return node.char
 
-    #by peter :)
 
-    
-    def PrintTree(self,i = 0): #tree print function
-        print(i* "  ",self.nodetype , " - \'" , self.char, "\'")
-        if self.lhn != None : self.lhn.PrintTree(i+1)
-        if self.rhn != None : self.rhn.PrintTree(i+1)
 

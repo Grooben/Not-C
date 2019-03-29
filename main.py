@@ -6,6 +6,7 @@
 #Imported files
 import LexicalAnalysis as lex
 import symtable
+import parseTreeGeneration as treeGen
 
 #Reads source file
 lex.file = open("sourceFile.txt", "r")
@@ -15,7 +16,9 @@ while True:
     token        =  tokenStream[0]     #Grabs token.
     Line         =  tokenStream[1]     #Grabs line.
     Column       =  tokenStream[2]     #Grabs column.
-    #Catagory = categories[tokenStream[0]]
+    
+    if len(tokenStream)>3:treeGen.addNode(lex.tokentable.categories[tokenStream[0]],lex.tokentable.all_syms[tokenStream[0]],tokenStream[3])
+    else: treeGen.addNode(lex.tokentable.categories[tokenStream[0]],lex.tokentable.all_syms[tokenStream[0]])
 
     #Prints token visually, comment over when needed.
     print ("%5d  %10d %-20s %-14s" % (Line, Column,lex.tokentable.categories[tokenStream[0]], lex.tokentable.all_syms[tokenStream[0]]), end='')    

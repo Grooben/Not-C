@@ -9,44 +9,15 @@ operator = "operator"
 
 from semantics import Node
 
-ParseTrees = []
+GeneratedTrees = []
 
-token = []       #test data
-token.append(Node(variable, "c"))
-token.append(Node(assignment,'='))
-token.append(Node(variable, "x"))
-token.append(Node(operator, "-"))
-token.append(Node(variable, "y"))
+nodeBuffer = [];##temp  buffer holds all code from a line.
+def addNode(catagory, tokenType, val = None):
+    nodeBuffer.append(Node(catagory, tokenType, val))
 
-
-
-def nodeIndex(tokens, criteria):
-    i = 0
-    for Node in tokens:
-        if Node.nodetype == criteria: return i
-        i +=1
-    return None
-
-#assignment sorting:------------------------------------------
-    
-def treeGen(tokens):
-
-    if nodeIndex(tokens,assignment) != None :
-        root = tokens[nodeIndex(tokens,assignment)]
-        del tokens[nodeIndex(tokens,assignment)]
-
-        root.lhn = tokens[nodeIndex(tokens,variable)]
-        del tokens[nodeIndex(tokens,variable)] 
-
-
-    root.PrintTree()
-
-
-treeGen(token)
 
 #-------------------------------------------------------------
 
-
-
-
+def EvalBuffer():
+    None
 
