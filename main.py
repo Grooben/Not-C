@@ -17,7 +17,7 @@ while True:
     Line         =  tokenStream[1]     #Grabs line.
     Column       =  tokenStream[2]     #Grabs column.
     
-    if len(tokenStream)>3:treeGen.addNode(lex.tokentable.categories[tokenStream[0]],lex.tokentable.all_syms[tokenStream[0]],tokenStream[3])
+    if len(tokenStream)>3:treeGen.addNode(lex.tokentable.categories[tokenStream[0]],lex.tokentable.all_syms[tokenStream[0]],tokenStream[3])     ##adds token to tree gen buffer.
     else: treeGen.addNode(lex.tokentable.categories[tokenStream[0]],lex.tokentable.all_syms[tokenStream[0]])
 
     #Prints token visually, comment over when needed.
