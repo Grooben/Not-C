@@ -21,10 +21,12 @@ all_syms = ['End_of_File', 'OMulti', 'ODivide','OMod', 'OAdd',
             'RightBrace', 'SemiColon', 'Comma', 'Identifier', 'Integer', 
             'String', 'KeywordInt', 'KeywordSTRING', 'EOL']
 
+
+#changed comparaters to "compare" rather then "Operator"
 categories = ['EOF', 'Operator', 'Operator', 'Operator', 'Operator',
-              'Operator', 'Operator', 'Operator', 'Operator', 'Operator',
-              'Operator', 'Operator', 'Operator', 'Operator', 'Assignment',
-              'Operator', 'Operator', 'Conditional', 'Conditional', 'Conditional', 
+              'Operator', 'Operator', 'Compare', 'Compare', 'Compare',
+              'Compare', 'Compare', 'Compare', 'Compare', 'Assignment',
+              'Operator', 'Operator', 'Function', 'Function', 'Function', 
               'Function', 'Punctuator', 'Punctuator', 'Punctuator', 'Punctuator',
               'Punctuator','StatementTerminator','Punctuator','Variable','Variable',
               'Variable', 'Operator', 'Operator', 'EOL']

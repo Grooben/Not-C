@@ -15,10 +15,10 @@ while True:
     token        =  tokenStream[0]     #Grabs token.
     Line         =  tokenStream[1]     #Grabs line.
     Column       =  tokenStream[2]     #Grabs column.
-
+    #Catagory = categories[tokenStream[0]]
 
     #Prints token visually, comment over when needed.
-    print("%5d  %5d   %-14s" % (Line, Column, lex.tokentable.all_syms[token]), end='')     
+    print ("%5d  %10d %-20s %-14s" % (Line, Column,lex.tokentable.categories[tokenStream[0]], lex.tokentable.all_syms[tokenStream[0]]), end='')    
 
     if token == lex.tokentable.TokenInteger: print("  %5d" % (tokenStream[3]))
     elif token == lex.tokentable.TokenString: print(' "%s"' % (tokenStream[3]))
@@ -29,7 +29,7 @@ while True:
     if lex.endOfLine == True:
         lex.endOfLine = False
         tokenStream = lex.tokentable.TokenEOL, Line, Column
-        print ("%5d  %5d   %-14s" % (Line, Column, lex.tokentable.all_syms[tokenStream[0]]), end='') 
+        print ("%5d  %10d %-20s %-14s" % (Line, Column,lex.tokentable.categories[tokenStream[0]], lex.tokentable.all_syms[tokenStream[0]]), end='') 
         print ("\n")
 
     #Ends loop if 'TokenEOF' is detected. 
