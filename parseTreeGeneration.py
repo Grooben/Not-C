@@ -45,7 +45,8 @@ class Buffer:  ##Buffer class contains all manipulation code.
 
         return root
 
-    def Eval(self, parent, lhn, min=0, max=len(data)): ##recursive eval function
+    def Eval(self, parent, lhn, min=0, max= None): ##recursive eval function
+        if max == None : max=len(self.data)
         print(parent, lhn, min,max)
         if (self.find("Function",min,max)):
             if lhn: parent.lhn= self.data[self.find ("Function",min,max)]
@@ -64,8 +65,9 @@ class Buffer:  ##Buffer class contains all manipulation code.
         if lhn: parent = parent.lhn##rebases parent in correct node for send 
         else: parent = parent.rhn
 
-        self.Eval(parent,True,min,splice-1)
-        self.Eval(parent,False,splice+1,max)
+        if splice-1>min:self.Eval(parent,True,min,splice-1)
+        if splice+1<max:self.Eval(parent,False,splice+1,max)
+        
 
     def add(self, catagory, tokenType, val = None):
         print(catagory)
