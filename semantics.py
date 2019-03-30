@@ -5,8 +5,8 @@ import symtable
 import errorhandling
 from parseTreeGeneration import Node 
 
-# Node evaluation function - will evaluate the root node or passed node through a swither and call function
-def eval(node):
+# Node evaluation function - will evaluate the root node or passed node through a swither and call function, require bool for type check loop then setting loop
+def eval(node, bool):
     switcher = {
         "equal": equal,
         "addition": add,
@@ -17,52 +17,88 @@ def eval(node):
         "constant": const
         }
     function = switcher[node.type]
-    return function(node)
+    return function(node, bool)
 
 # Equal function - evals right side, assigns left return value from right eval
-def equal(node):
-    l = symtable.lookup(node.lhn.value) 
-    r = eval(node.rhn)
-    type_check_assign(node)
-    symtable.set_attribute(l, r)
-    return
+def equal(node, bool):
+    if (bool != True): 
+        # Type checking loop
+        print("type check loop")
+        l = symtable.lookup(node.lhn.value) 
+        r = eval(node.rhn, bool)
+        type_check_assign(node)
+        eval(node, True)
+    else:
+        # Setting loop
+        print("set loop")
+        l = symtable.lookup(node.lhn.value) 
+        r = eval(node.rhn, True)
+        symtable.set_attribute(l, r)
+        return 
 
 # Add function - returns left and right addition
-def add(node):
-    l = eval(node.lhn)
-    r = eval(node.rhn)
-    type_check_sum(l, r)
-    return l + r
+def add(node, bool):
+    if (bool != True):
+        l = eval(node.lhn, bool)
+        r = eval(node.rhn, bool)
+        type_check_sum(l, r)
+        return l + r
+    else:
+        l = eval(node.lhn, bool)
+        r = eval(node.rhn, bool)
+        return (l + " + " + r)
+
 
 # Sub function - returns left and right subtraction 
-def sub(node):
-    l = eval(node.lhn)
-    r = eval(node.rhn)
-    type_check_sum(l, r)
-    return l - r
+def sub(node, bool):
+    if (bool != True):
+        l = eval(node.lhn, bool)
+        r = eval(node.rhn, bool)
+        type_check_sum(l, r)
+        return l - r
+    else:
+        l = eval(node.lhn, bool)
+        r = eval(node.rhn, bool)
+        return (l + " - " + r)
 
 # mult function - returns left and right multiplication 
-def mult(node):
-    l = eval(node.lhn)
-    r = eval(node.rhn)
-    type_check_sum(l, r)
-    return l * r
+def mult(node, bool):
+    if (bool != True):
+        l = eval(node.lhn, bool)
+        r = eval(node.rhn, bool)
+        type_check_sum(l, r)
+        return l * r
+    else:
+        l = eval(node.lhn, bool)
+        r = eval(node.rhn, bool)
+        return (l + " * " + r)
 
 # div function - returns left and right division
-def div(node):
-    l = eval(node.lhn)
-    r = eval(node.rhn)
-    type_check_sum(l, r)
-    return l / r
+def div(node, bool):
+    if (bool != True):
+        l = eval(node.lhn, bool)
+        r = eval(node.rhn, bool)
+        type_check_sum(l, r)
+        return l / r
+    else:
+        l = eval(node.lhn, bool)
+        r = eval(node.rhn, bool)
+        return (l + " / " + r)
 
 # var function - returns variable value after lookup 
-def var(node):
+def var(node, bool):
     var = symtable.lookup(node.value)
-    return var.value
+    if (bool != True):
+        return var.value
+    else:
+        return var.name 
 
 # const function - returns the constant i.e. its name
-def const(node):
-    return node.value
+def const(node, bool):
+    if (bool != True):
+        return node.value
+    else:
+        return str(node.value) 
 
 # Type checking function - will check if the variables/constants being summed are of the same type
 def type_check_sum(leftnode, rightnode):  
@@ -105,7 +141,7 @@ def type_check_assign(node):
 #symtable.insert("X", "Int", 5)
 #nodel = Node("variable", "X")
 #noder = Node("constant", 5)
-#root = Node("divide", "+", nodel, noder)
+#root = Node("divide", "/", nodel, noder)
 #print(eval(root))
 #symtable.printTable()
 
@@ -113,7 +149,7 @@ def type_check_assign(node):
 #symtable.insert("Y", "Int", 5)
 #nodel = Node("variable", "X")
 #noder = Node("variable", "Y")
-#root = Node("multiply", "+", noder, nodel)
+#root = Node("multiply", "*", noder, nodel)
 #print(eval(root))
 
 #symtable.insert("X", "Int", 0)
@@ -121,7 +157,24 @@ def type_check_assign(node):
 #symtable.printTable()
 #nodel = Node("variable", "X")
 #noder = Node("variable", "y")
-#root = Node("equal", "+", nodel, noder)
+#root = Node("equal", "=", nodel, noder)
 #print(eval(root))
 #symtable.printTable()
 
+#symtable.insert("X", "Int", 0)
+#symtable.printTable()
+#nodel = Node("variable", "X")
+#noder = Node("variable", "y")
+#root = Node("equal", "=", nodel, noder)
+#print(eval(root))
+#symtable.printTable()
+
+#symtable.insert("X", "Int", 0)
+#symtable.insert("y", "Int", 6)
+#nodel1 = Node("variable", "X")
+#nodel2 = Node("variable", "y")
+#noder2 = Node("constant", 12)
+#noder1 = Node("addition", "+", nodel2, noder2)
+#root = Node("equal", "=", nodel1, noder1)
+#print(eval(root, False))
+#symtable.printTable()
