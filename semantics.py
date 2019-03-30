@@ -9,12 +9,12 @@ import errorhandling
 # Class defintion - will be removed, require by syntax and functions can simply be imported and called
 
 class Node: 
-    def __init__(self, type, value, lhn = None, rhn = None):
-        self.catagory = None
-        self.type = type
-        self.value = value
-        self.lhn = lhn
-        self.rhn = rhn
+    #def __init__(self, type, value, lhn = None, rhn = None):
+     #   self.catagory = None
+      #  self.type = type
+       # self.value = value
+        #self.lhn = lhn
+        #self.rhn = rhn
 
     def __init__( self,catagory, type, value= None, lhn = None, rhn = None):
         self.catagory = catagory
