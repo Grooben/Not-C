@@ -5,6 +5,7 @@ from semantics import Node
 
 class Buffer:  ##Buffer class contains all manipulation code.
     data=[]
+    GeneratedTrees = []
     count = 0
 
     def __init__(self):
@@ -45,24 +46,24 @@ class Buffer:  ##Buffer class contains all manipulation code.
 
         return root
 
-    def Eval(self, parent, lhn, min=0, max= None): ##recursive eval function
+    def Eval(self, parent, ln, min=0, max= None): ##recursive eval function
         if max == None : max=len(self.data)
-        print(parent, lhn, min,max)
+        print(parent, ln, min,max)
         if (self.find("Function",min,max)):
-            if lhn: parent.lhn= self.data[self.find ("Function",min,max)]
+            if ln: parent.lhn= self.data[self.find ("Function",min,max)]
             else: parent.rhn= self.data[self.find ("Function",min,max)]
             splice =  self.find ("Function",min,max)
         elif (self.find("Operator",min,max)):
-            if lhn: parent.lhn= self.data[self.find ("Operator",min,max)]
+            if ln: parent.lhn= self.data[self.find ("Operator",min,max)]
             else: parent.rhn= self.data[self.find ("Operator",min,max)]
             splice =  self.find ("Operator",min,max)
         elif (self.find("Variable",min,max)):
-            if lhn: parent.lhn= self.data[self.find ("Variable",min,max)]
+            if ln: parent.lhn= self.data[self.find ("Variable",min,max)]
             else: parent.rhn= self.data[self.find ("Variable",min,max)]
             return
         else : return
 
-        if lhn: parent = parent.lhn##rebases parent in correct node for send 
+        if ln: parent = parent.lhn##rebases parent in correct node for send 
         else: parent = parent.rhn
 
         if splice-1>min:self.Eval(parent,True,min,splice-1)
@@ -73,12 +74,13 @@ class Buffer:  ##Buffer class contains all manipulation code.
         print(catagory)
         self.data.append(Node(catagory, tokenType, val))
         if catagory == "StatementTerminator": 
-            GeneratedTrees.append(self.StartEval())
-            self.data[self.count].PrintTree()
+            self.GeneratedTrees.append(self.StartEval())
+            self.GeneratedTrees[self.count].PrintTree()
+            self.data.clear()
             self.count =+ 1
             print("tree complete")
 
-GeneratedTrees = []
+
 
 nodeBuffer = Buffer();
 def addNode(catagory, tokenType, val = None):
