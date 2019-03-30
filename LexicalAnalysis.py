@@ -15,6 +15,7 @@ Character = " "
 Column = 0
 Line = 1
 file = None
+endOfLine = False
 
 Idname = ""
 
@@ -26,13 +27,17 @@ tokenCount = 0
 #Once a new line is detected, the column (Character) will reset to the start of the line, and shift line.
 def grabNextCharacter():
 
-    global Character, Column, Line
+    global Character, Column, Line, endOfLine 
 
     Character = file.read(1)      
     Column += 1       
-    if Character == '\n':       
-        Line += 1
-        Column = 0
+    if Character == '\n':   
+      Line += 1 
+      Column = 0 
+      endOfLine = True 
+
+       ##SHOULD BE RETURNING TOKEN TO MAIN.PY HERE, BUT THIS IS CALLED SEVERAL TIMES WITHIN FILES ITS SELF 
+
     return Character
 
 #Function which identifies the following character after a previous character and returns the correct token, based on the parameters. 
@@ -155,6 +160,7 @@ def bufferTokens(token):
 #Get Token function calls the grab next character function and identifies what token the character is by a series of if statements.
 def getToken():
 
+    global Character, Column, Line
     #Checks whether the character is white space or not, if true return next character. 
     while Character.isspace():      
         grabNextCharacter()
