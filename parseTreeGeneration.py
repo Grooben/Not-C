@@ -75,7 +75,7 @@ class Buffer:  ##Buffer class contains all manipulation code.
             self.GeneratedTrees.append(self.StartEval())
             self.GeneratedTrees[self.count].PrintTree()
             self.data.clear()
-            self.count =+ 1
+            self.count = self.count + 1
             print("tree complete")
 
 
