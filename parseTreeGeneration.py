@@ -1,75 +1,94 @@
 #Author: PeterMaltby
 #Created: 18/03/2019
 
-#translation table, sorry if this is dirty
+from semantics import Node
 
-assignment = "assignment"
-variable = "variable"
-operator = "operator"
+class TreeGen:  ##Buffer class contains all manipulation code.
+    data=[]
+    GeneratedTrees = []
+    count = 0
 
-class Node: 
-    def __init__(self, type, value, lhn = None, rhn = None):
-        self.type = type
-        self.value = value 
-        self.lhn = lhn
-        self.rhn = rhn
+    def __init__(self):
+        data = []
 
-ParseTrees = []
+    def find(self, criteria, i = 0):
+        for Node in self.data:
+            if Node.catagory == criteria: return i
+            i +=1
+        return None
 
-token = []       #test data
-token.append(Node(variable, "c"))
-token.append(Node(assignment,'='))
-token.append(Node(variable, "x"))
-token.append(Node(operator, "-"))
-token.append(Node(variable, "y"))
-token.append(Node(operator, "+"))
-token.append(Node(variable, "z"))
-
-
-
-def nodeIndex(tokens, criteria):
-    i = 0
-    for Node in tokens:
-        if Node.nodetype == criteria: return i
-        i +=1
-    return None
-
-
-
-#assignment sorting:------------------------------------------
+    def find(self, criteria, i = 0,max = 1000) :##todo remove hardcoded max
+        if max>len(self.data)-1:max = (len(self.data)-1)
+        while True:
+            if self.data[i].catagory == criteria: return i
+            if i>=max: return "Null"
+            i = i+1
     
-def treeGen(tokens):
+    def StartEval(self):##sets root node and sends program to recursivly gen tree.
 
-    if nodeIndex(tokens,assignment) != None :#checks if list contains assignment operator
-        root = tokens[nodeIndex(tokens,assignment)]
-        del tokens[nodeIndex(tokens,assignment)]#sets assignment as root.
+        root = None
+        splice = None # temp vlaue for storing spice postion for recurision.
+        
+        if (self.find ("Assignment")!= "Null"):
+            #if self.find("Assignment",self.find("Assignment")+1):##ensures only one assign per line.
+                #print("Error Multiple assign") #add error handeling
+            root= self.data[self.find ("Assignment")]
+            splice =  self.find ("Assignment")
+        elif (self.find("Function")!= "Null"):
+            root= self.data[self.find ("Function")]
+            splice =  self.find ("Function")
+        if splice != "Null":
+            if splice>1: self.Eval(root,True,0,splice-1)
+            if splice<len(self.data)-1: self.Eval(root,False,splice+1)
 
-        root.lhn = tokens[nodeIndex(tokens,variable)]
-        del tokens[nodeIndex(tokens,variable)] 
+        return root
 
-        temp = root#tree save point for recursive programs.
-        while nodeIndex(tokens,operator) != None :#recursivly builds right of tree.
-            temp.rhn=tokens[nodeIndex(tokens,operator)]
-            del tokens[nodeIndex(tokens,operator)]
+    def Eval(self, parent, ln, min=0, max= None): ##recursive eval function
+        if max == None : max=len(self.data)-1
+        print(parent, ln, min,max)
+
+        if (self.find("Function",min,max)!= "Null"):
+            if ln: parent.lhn= self.data[self.find ("Function",min,max)]
+            else: parent.rhn= self.data[self.find ("Function",min,max)]
+            splice =  self.find ("Function",min,max)
+        elif (self.find("Comma",min,max)!= "Null"):
+            if ln: parent.lhn= self.data[self.find ("Comma",min,max)]
+            else: parent.rhn= self.data[self.find ("Comma",min,max)]
+            splice =  self.find ("Comma",min,max)
+        elif (self.find("Operator",min,max)!= "Null"):
+            if ln: parent.lhn= self.data[self.find ("Operator",min,max)]
+            else: parent.rhn= self.data[self.find ("Operator",min,max)]
+            splice =  self.find ("Operator",min,max)
+        elif (self.find("Variable",min,max)!= "Null"):
+            if ln: parent.lhn= self.data[self.find ("Variable",min,max)]
+            else: parent.rhn= self.data[self.find ("Variable",min,max)]
+            return
+        else : return
+
+        if ln: parent = parent.lhn##rebases parent in correct node for send 
+        else: parent = parent.rhn
+
+        if splice-1>=min:self.Eval(parent,True,min,splice-1)
+        if splice+1<=max:self.Eval(parent,False,splice+1,max)
+        
+
+    def add(self, catagory, tokenType, val = None):
+        #print(catagory, " ", tokenType)
+        self.data.append(Node(catagory, tokenType, val))
+        if catagory == "EOL": 
+            self.GeneratedTrees.append(self.StartEval())
             
-            temp= temp.rhn#rebase temp for recursion using object refrence.
-            temp.lhn=tokens[nodeIndex(tokens,variable)]
-            del tokens[nodeIndex(tokens,variable)]
+            self.GeneratedTrees[self.count].PrintTree()
+            self.data.clear()
+            self.count = self.count + 1
+            print("tree complete")
 
-        temp.rhn=tokens[nodeIndex(tokens,variable)]
-        del tokens[nodeIndex(tokens,variable)]
+    def retrieve(self, n):
+        return GeneratedTrees[n]
 
-        if tokens:
-            print("list not empty")#todo update to proper error handeling.
+##redundant class used for test adding now done withen class.
+def addNode(catagory, tokenType, val = None):
+    nodeBuffer.add(catagory, tokenType, val)
 
-    root.PrintTree()#prints completed tree.
-
-
-treeGen(token)
 
 #-------------------------------------------------------------
-
-def PrintTree(self,i = 0): #tree print function
-    print(i* "  ",self.nodetype , " - \'" , self.value, "\'")
-    if self.lhn != None : self.lhn.PrintTree(i+1)
-    if self.rhn != None : self.rhn.PrintTree(i+1)
