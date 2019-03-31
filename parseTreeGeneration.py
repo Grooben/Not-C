@@ -45,7 +45,7 @@ class Buffer:  ##Buffer class contains all manipulation code.
 
     def Eval(self, parent, ln, min=0, max= None): ##recursive eval function
         if max == None : max=len(self.data)-1
-        print(parent, ln, min,max)
+        #print(parent, ln, min,max)
 
         if (self.find("Function",min,max)!= "Null"):
             if ln: parent.lhn= self.data[self.find ("Function",min,max)]
@@ -73,7 +73,7 @@ class Buffer:  ##Buffer class contains all manipulation code.
         self.data.append(Node(catagory, tokenType, val))
         if catagory == "EOL": 
             self.GeneratedTrees.append(self.StartEval())
-            self.GeneratedTrees[self.count].PrintTree()
+            #self.GeneratedTrees[self.count].PrintTree()
             self.data.clear()
             self.count = self.count + 1
             print("tree complete")

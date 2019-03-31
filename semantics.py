@@ -24,9 +24,13 @@ class Node:
         self.rhn = rhn
     
     def PrintTree(self,i = 0): #tree print function
-        print(i* "  ",self.type , " - \'" , self.value, "\'")
-        if self.lhn != None : self.lhn.PrintTree(i+1)
-        if self.rhn != None : self.rhn.PrintTree(i+1)
+        print(self.type , " - \'" , self.value, "\'")
+        if self.lhn != None : 
+            print(i* " ", "L: ", end = '')
+            self.lhn.PrintTree(i+1)
+        if self.rhn != None : 
+            print(i* " ", "R: ", end = '')
+            self.rhn.PrintTree(i+1)
 
 
 # Node evaluation function - will evaluate the root node or passed node through a swither and call function
