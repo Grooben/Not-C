@@ -1,4 +1,4 @@
-Int c = 23;
+Int c = 23 + 1;
 Int x = 9;
 String b = "hi";
 print(x, "\n");

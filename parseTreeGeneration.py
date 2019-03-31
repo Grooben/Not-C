@@ -18,11 +18,11 @@ class TreeGen:  ##Buffer class contains all manipulation code.
         return None
 
     def find(self, criteria, i = 0,max = 1000) :##todo remove hardcoded max
-        for Node in self.data:
-            if Node.catagory == criteria: return i
-            if i>max: return "Null"##null workaround for 0 == None
-            i +=1  
-        return "Null"
+        if max>len(self.data)-1:max = (len(self.data)-1)
+        while True:
+            if self.data[i].catagory == criteria: return i
+            if i>=max: return "Null"
+            i = i+1
     
     def StartEval(self):##sets root node and sends program to recursivly gen tree.
 
@@ -37,7 +37,7 @@ class TreeGen:  ##Buffer class contains all manipulation code.
         elif (self.find("Function")!= "Null"):
             root= self.data[self.find ("Function")]
             splice =  self.find ("Function")
-        if splice != None:
+        if splice != "Null":
             if splice>1: self.Eval(root,True,0,splice-1)
             if splice<len(self.data)-1: self.Eval(root,False,splice+1)
 
@@ -45,7 +45,7 @@ class TreeGen:  ##Buffer class contains all manipulation code.
 
     def Eval(self, parent, ln, min=0, max= None): ##recursive eval function
         if max == None : max=len(self.data)-1
-        #print(parent, ln, min,max)
+        print(parent, ln, min,max)
 
         if (self.find("Function",min,max)!= "Null"):
             if ln: parent.lhn= self.data[self.find ("Function",min,max)]
@@ -73,7 +73,8 @@ class TreeGen:  ##Buffer class contains all manipulation code.
         self.data.append(Node(catagory, tokenType, val))
         if catagory == "EOL": 
             self.GeneratedTrees.append(self.StartEval())
-            #self.GeneratedTrees[self.count].PrintTree()
+            
+            self.GeneratedTrees[self.count].PrintTree()
             self.data.clear()
             self.count = self.count + 1
             print("tree complete")
@@ -81,7 +82,7 @@ class TreeGen:  ##Buffer class contains all manipulation code.
     def retrieve(self, n):
         return GeneratedTrees[n]
 
-##redundant class sued for test adding now done withen class.
+##redundant class used for test adding now done withen class.
 def addNode(catagory, tokenType, val = None):
     nodeBuffer.add(catagory, tokenType, val)
 

@@ -66,7 +66,7 @@ BELOW CODE IS JUST FOR TESTING
 '''
 
 print("\n\nGENERATED TREES: ")
-i=0
+i=1
 for Node in Buffer.GeneratedTrees:
     print ("\nLine: ",i)
     Node.PrintTree()
