@@ -3,7 +3,7 @@
 
 from semantics import Node
 
-class Buffer:  ##Buffer class contains all manipulation code.
+class TreeGen:  ##Buffer class contains all manipulation code.
     data=[]
     GeneratedTrees = []
     count = 0
@@ -69,7 +69,7 @@ class Buffer:  ##Buffer class contains all manipulation code.
         
 
     def add(self, catagory, tokenType, val = None):
-        print(catagory, " ", tokenType)
+        #print(catagory, " ", tokenType)
         self.data.append(Node(catagory, tokenType, val))
         if catagory == "EOL": 
             self.GeneratedTrees.append(self.StartEval())
@@ -78,9 +78,10 @@ class Buffer:  ##Buffer class contains all manipulation code.
             self.count = self.count + 1
             print("tree complete")
 
+    def retrieve(self, n):
+        return GeneratedTrees[n]
 
-
-nodeBuffer = Buffer();
+##redundant class sued for test adding now done withen class.
 def addNode(catagory, tokenType, val = None):
     nodeBuffer.add(catagory, tokenType, val)
 
