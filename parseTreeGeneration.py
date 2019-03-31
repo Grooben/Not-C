@@ -51,6 +51,10 @@ class TreeGen:  ##Buffer class contains all manipulation code.
             if ln: parent.lhn= self.data[self.find ("Function",min,max)]
             else: parent.rhn= self.data[self.find ("Function",min,max)]
             splice =  self.find ("Function",min,max)
+        elif (self.find("Comma",min,max)!= "Null"):
+            if ln: parent.lhn= self.data[self.find ("Comma",min,max)]
+            else: parent.rhn= self.data[self.find ("Comma",min,max)]
+            splice =  self.find ("Comma",min,max)
         elif (self.find("Operator",min,max)!= "Null"):
             if ln: parent.lhn= self.data[self.find ("Operator",min,max)]
             else: parent.rhn= self.data[self.find ("Operator",min,max)]

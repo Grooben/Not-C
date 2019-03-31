@@ -28,7 +28,7 @@ categories = ['EOF', 'Operator', 'Operator', 'Operator', 'Operator',
               'Compare', 'Compare', 'Compare', 'Compare', 'Assignment',
               'Operator', 'Operator', 'Function', 'Function', 'Function', 
               'Function', 'Punctuator', 'Punctuator', 'Punctuator', 'Punctuator',
-              'Punctuator','StatementTerminator','Punctuator','Variable','Variable',
+              'Punctuator','StatementTerminator','Comma','Variable','Variable',            ##comma added by peter for a unique priority in parse tree. sorry.
               'Variable', 'Operator', 'Operator', 'EOL']
     
 Symbols = { '{': TokenLbrace,
