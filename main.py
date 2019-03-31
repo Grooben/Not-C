@@ -9,7 +9,7 @@ import symtable
 import parseTreeGeneration as treeGen
 
 #Reads source file
-lex.file = open("sourceFile.txt", "r")
+lex.file = open("sourceFile2.txt", "r")
 Idname =""
 
 Buffer = treeGen.TreeGen();#tree gen class setup.

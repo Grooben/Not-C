@@ -1,0 +1,9 @@
+Int c = 23;
+Int x = 9;
+String b = "hi";
+print(x, "\n");
+print(69);
+	if x == 9
+		print("Hello world")
+Int a = 8;
+print(x+23/3);
