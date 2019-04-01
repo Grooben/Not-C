@@ -21,9 +21,9 @@ outputProg = asm.ProgramCode()
 # Add static data from intermediate code to program container
 for x in intermediate.data:
     if x.typename == "String":
-        outputProg.addData(asm.String(x.value, x.identifier))
+        outputProg.addData(asm.String(x.value, "nc_str_" + x.identifier))
     elif x.typename == "Integer":
-        outputProg.addData(asm.Integer(x.value, x.identifier))
+        outputProg.addData(asm.Integer(x.value, "nc_int_" + x.identifier))
 
 # Data belonging to no identifier still has to be declared as static data.
 # This serves as a global counter to assign unique labels for this data in ASM.
@@ -41,8 +41,13 @@ for x in intermediate.calls:
         if not y.isName:
             # Increment the counter
             literalCount = literalCount + 1
+            prefix = ""
+            if y.typename == "Integer":
+                prefix = "nc_int"
+            elif y.typename == "String":
+                prefix = "nc_str"
             # Unique label for this data
-            dataname = "_constant_{0}_{1}".format(x.command, literalCount)
+            dataname = prefix + "_constant_{0}_{1}".format(x.command, literalCount)
             if y.typename == "String": 
                 newString = asm.String(y.value, dataname)
                 outputProg.addData(newString)
@@ -50,11 +55,17 @@ for x in intermediate.calls:
                 newInteger = asm.Integer(y.value, dataname)
                 outputProg.addData(newInteger)
             # Add this data's unique label to the syscall symbol list 
-            syscall.symbols.append(dataname)
+            
+            syscall.symbols.append(dataname) # TODO: Proper type-checking. This is designed around the print function.
             print("Added syscall for {0} command with {1} symbols.".format(x.command, len(syscall.symbols)))
         else:
+            prefix = ""
+            if y.typename == "Integer":
+                prefix = "nc_int_"
+            elif y.typename == "String":
+                prefix = "nc_str_"
             # Add this data's identifier to the syscall symbol list
-            syscall.symbols.append(y.value)
+            syscall.symbols.append(prefix + y.value)
     # Add the syscall to the program's command list
     outputProg.addCall(syscall)
 
