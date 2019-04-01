@@ -18,7 +18,11 @@ class String:
         else:
             self.name = name
     def asm(self):
-        return "{0}:\tdb '{1}', 0\n{0}_LEN:\tequ $-{0}".format(self.name, self.data)
+        suffix = ""
+        while self.data.find("\\n") >= 0:
+            suffix = "10, "
+            self.data = self.data.replace("\\n", "")
+        return "{0}:\tdb '{1}', {2}0\n{0}_LEN:\tequ $-{0}".format(self.name, self.data, suffix)
 
 class Integer:
     intCount = 0
