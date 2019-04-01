@@ -1,6 +1,6 @@
 section .data
-	org: dd 420
-	num: dd 420
+	org: dd 9
+	num: dd 9
 	chars: db '0123456789', 0
 	buf: times 1024 db 0, 0
 	lastChar: db ' ', 0
@@ -68,10 +68,10 @@ section .text
 		mov [lastChar], edx ; DEBUGGING
 		inc ebx
 		mov [strLen], ebx
-		mov ebx, [strSz]
-		dec ebx
-		cmp [strLen], ebx
-		je printStr
+		;mov ebx, [strSz]
+		;dec ebx
+		;cmp [strLen], ebx
+		;je printStr
 		xor eax, eax
 		mov [steps], eax ; steps = 0
 	convertBuildLoop1:
@@ -100,53 +100,51 @@ section .text
 		mov [highestPow], eax
 		jmp convertBuildLoop1
 	convertBuildCheck:
-		mov ebx, 2
-		mov edx, [strLen]
-		cmp [steps], ebx ; if steps == 2
-		jne convertBuildLoop2Pre
-		mov eax, '0'
-		mov [buf+edx], eax 
-		mov [lastChar], eax
-		inc edx
-		mov [strLen], edx
-		mov edx, [strSz]
-		dec edx
-		cmp [strLen], edx
-		je printStr
+		;mov ebx, 2
+		;mov edx, [strLen]
+		;cmp [steps], ebx ; if steps == 2
+		;jne convertBuildLoop2Pre
+		;mov eax, '0'
+		;mov [buf+edx], eax 
+		;mov [lastChar], eax
+		;inc edx
+		;mov [strLen], edx
+		;mov edx, [strSz]
+		;dec edx
+		;cmp [strLen], edx
+		;je printStr
 	convertBuildLoop2Pre:
 		xor ecx, ecx
-		inc ecx ; range(1, steps-1)
 	convertBuildLoop2:
 		mov eax, [steps]
 		dec eax
-		dec eax
 		cmp ecx, eax ; check 1 <= s < steps-1
-		jge convertLoopExit
+		jg convertLoopExit
 		mov eax, '0'
 		mov edx, [strLen]
 		mov [buf+edx], eax
 		mov [lastChar], eax
 		inc edx
 		mov [strLen], edx
-		mov edx, [strSz]
-		dec edx
-		cmp edx, [strLen]
-		je printStr
+		;mov edx, [strSz]
+		;dec edx
+		;cmp edx, [strLen]
+		;je printStr
 		mov edx, [steps]
 		dec edx
 		dec edx
 		cmp ecx, edx; if s >= steps - 2
 		jl convertBuildLoop2Post
-		mov eax, '0'
-		mov edx, [strLen]
-		mov [buf+edx], eax
-		mov [lastChar], eax
-		inc edx
-		mov [strLen], edx
-		mov edx, [strSz]
-		dec edx
-		cmp [strLen], edx
-		je printStr
+		;mov eax, '0'
+		;mov edx, [strLen]
+		;mov [buf+edx], eax
+		;mov [lastChar], eax
+		;inc edx
+		;mov [strLen], edx
+		;mov edx, [strSz]
+		;dec edx
+		;cmp [strLen], edx
+		;je printStr
 	convertBuildLoop2Post:
 		inc ecx ; s += 1
 		jmp convertBuildLoop2
@@ -154,25 +152,28 @@ section .text
 		mov eax, [num]
 		mov ebx, 0
 		cmp eax, ebx
+	cleJmp1:
 		jne mainLoop
-		mov ebx, [org]
 		xor edx, edx
-		mov eax, 10
+		mov eax, [org]
+		mov ebx, 10
 		cdq
 		idiv ebx
 		mov ebx, 0
 		cmp edx, ebx
+	cleJmp2:
 		jne mainLoop
-		mov eax, '0'
-		mov edx, [strLen]
-		mov [buf+edx], eax ; finalStr += "0"
-		mov [lastChar], eax
-		inc edx
-		mov [strLen], edx
-		mov edx, [strSz]
-		dec edx
-		cmp [strLen], edx
-		je printStr
+	convertLoopFinalZero:
+		;mov eax, '0'
+		;mov edx, [strLen]
+		;mov [buf+edx], eax ; finalStr += "0"
+		;mov [lastChar], eax
+		;inc edx
+		;mov [strLen], edx
+		;mov edx, [strSz]
+		;dec edx
+		;cmp [strLen], edx
+		;je printStr
 		jmp mainLoop
 	convertRoot: ; number -= 10**highestExp
 		mov eax, [num]
@@ -187,11 +188,8 @@ section .text
 		mov eax, 4
 		mov ebx, 1
 		mov ecx, buf
-		mov edx, [strLen]
-		inc edx
-		mov [strLen], edx
 	printStrCall:
-		mov edx, strLen
+		mov edx, [strLen]
 		int 80h
 		mov eax, 1
 		mov ebx, 0
