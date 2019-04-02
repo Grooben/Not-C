@@ -135,3 +135,5 @@ Temporary Items
 /.vs/ProjectSettings.json
 /.vs/slnx.sqlite
 /.vs/VSWorkspaceState.json
+.suo
+slnx.sqlite
