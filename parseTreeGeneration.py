@@ -1,7 +1,31 @@
 #Author: PeterMaltby
 #Created: 18/03/2019
 
-from semantics import Node
+class Node: 
+    #def __init__(self, type, value, lhn = None, rhn = None):
+     #   self.catagory = None
+      #  self.type = type
+       # self.value = value
+        #self.lhn = lhn
+        #self.rhn = rhn
+
+    def __init__( self,catagory, type, value= None, lhn = None, rhn = None):
+        self.catagory = catagory
+        self.type = type
+        self.value = value
+        self.lhn = lhn
+        self.rhn = rhn
+    
+    def PrintTree(self,i = 0): #tree print function
+        print(self.type , " - \'" , self.value, "\'")
+        if self.lhn != None : 
+            print(i* " ", "L: ", end = '')
+            self.lhn.PrintTree(i+1)
+        if self.rhn != None : 
+            print(i* " ", "R: ", end = '')
+            self.rhn.PrintTree(i+1)
+
+
 
 class TreeGen:  ##Buffer class contains all manipulation code.
     data=[]
@@ -45,7 +69,7 @@ class TreeGen:  ##Buffer class contains all manipulation code.
 
     def Eval(self, parent, ln, min=0, max= None): ##recursive eval function
         if max == None : max=len(self.data)-1
-        print(parent, ln, min,max)
+        #print(parent, ln, min,max)
 
         if (self.find("Function",min,max)!= "Null"):
             if ln: parent.lhn= self.data[self.find ("Function",min,max)]
@@ -78,7 +102,7 @@ class TreeGen:  ##Buffer class contains all manipulation code.
         if catagory == "EOL": 
             self.GeneratedTrees.append(self.StartEval())
             
-            self.GeneratedTrees[self.count].PrintTree()
+            #self.GeneratedTrees[self.count].PrintTree()
             self.data.clear()
             self.count = self.count + 1
             print("tree complete")
