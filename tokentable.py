@@ -31,6 +31,16 @@ categories = ['EOF', 'Operator', 'Operator', 'Operator', 'Operator',
               'Punctuator','StatementTerminator','Comma','Variable','Variable',            ##comma added by peter for a unique priority in parse tree.
               'Variable', 'Operator', 'Operator', 'EOL']
     
+#translation table from front end to back end. WIP.
+translation = ['End_of_File', 'OMulti', 'ODivide','OMod', 'OAdd', 
+            'OSub', 'ONeg', 'ONot', 'OLess','OLessequal',
+            'OGreater','OperationGreaterequal', 'OperationEqual', 'ONotequal', 'Oassign',
+            'OAnd', 'Oor', 'KeywordIF', 'KeywordELSE', 'KeywordWHILE', 
+            'KeywordPRINT', 'KeywordPutc', 'LeftParen', 'RightPaaren', 'LeftBrace', 
+            'RightBrace', 'SemiColon', 'Comma', 'Identifier', 'Integer', 
+            'String', 'KeywordInt', 'KeywordSTRING', 'EOL']
+
+
 Symbols = { '{': TokenLbrace,
             '}': TokenRbrace,
             '(': TokenLparen,

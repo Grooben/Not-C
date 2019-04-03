@@ -28,7 +28,7 @@ while True:
     elif token == lex.tokentable.TokenIdent: print("  %s" % (tokenStream[3])) 
     else: print("")
 
-    if len(tokenStream)>3:Buffer.add(lex.tokentable.categories[tokenStream[0]],lex.tokentable.all_syms[tokenStream[0]],tokenStream[3])     ##adds token to tree gen buffer.
+    if len(tokenStream)>3:Buffer.add(lex.tokentable.categories[tokenStream[0]],lex.tokentable.translation[tokenStream[0]],tokenStream[3])     ##adds token to tree gen buffer.
     else: Buffer.add(lex.tokentable.categories[tokenStream[0]],lex.tokentable.all_syms[tokenStream[0]])
 
     #Grabs END OF LINE Token, appends over filestream to output this. 
