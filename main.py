@@ -28,15 +28,16 @@ while True:
     elif token == lex.tokentable.TokenIdent: print("  %s" % (tokenStream[3])) 
     else: print("")
 
+    if len(tokenStream)>3:Buffer.add(lex.tokentable.categories[tokenStream[0]],lex.tokentable.all_syms[tokenStream[0]],tokenStream[3])     ##adds token to tree gen buffer.
+    else: Buffer.add(lex.tokentable.categories[tokenStream[0]],lex.tokentable.all_syms[tokenStream[0]])
+
     #Grabs END OF LINE Token, appends over filestream to output this. 
     if lex.endOfLine == True:
         lex.endOfLine = False
         tokenStream = lex.tokentable.TokenEOL, Line, Column
         print ("%5d  %10d %-20s %-14s" % (Line, Column,lex.tokentable.categories[tokenStream[0]], lex.tokentable.all_syms[tokenStream[0]]), end='') 
         print ("\n")
-
-    if len(tokenStream)>3:Buffer.add(lex.tokentable.categories[tokenStream[0]],lex.tokentable.all_syms[tokenStream[0]],tokenStream[3])     ##adds token to tree gen buffer.
-    else: Buffer.add(lex.tokentable.categories[tokenStream[0]],lex.tokentable.all_syms[tokenStream[0]])
+        Buffer.add(lex.tokentable.categories[tokenStream[0]],lex.tokentable.all_syms[tokenStream[0]])
 
     #Ends loop if 'TokenEOF' is detected. 
     if token == lex.tokentable.TokenEOF:

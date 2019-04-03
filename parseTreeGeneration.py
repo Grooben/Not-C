@@ -35,12 +35,6 @@ class TreeGen:  ##Buffer class contains all manipulation code.
     def __init__(self):
         data = []
 
-    def find(self, criteria, i = 0):
-        for Node in self.data:
-            if Node.catagory == criteria: return i
-            i +=1
-        return None
-
     def find(self, criteria, i = 0,max = 1000) :##todo remove hardcoded max
         if max>len(self.data)-1:max = (len(self.data)-1)
         while True:
