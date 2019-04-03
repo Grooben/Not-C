@@ -41,6 +41,8 @@ while True:
 
     #Ends loop if 'TokenEOF' is detected. 
     if token == lex.tokentable.TokenEOF:
+        tokenStream = lex.tokentable.TokenEOL, Line, Column##Adds EOL token before EOL to fix EOF bug.
+        Buffer.add(lex.tokentable.categories[tokenStream[0]],lex.tokentable.all_syms[tokenStream[0]])
         break
 
 #Example of printing table, remove when needed

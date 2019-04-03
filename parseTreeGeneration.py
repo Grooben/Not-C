@@ -45,7 +45,7 @@ class TreeGen:  ##Buffer class contains all manipulation code.
     def StartEval(self):##sets root node and sends program to recursivly gen tree.
 
         root = None
-        splice = None # temp vlaue for storing spice postion for recurision.
+        splice = "Null" # temp vlaue for storing spice postion for recurision.
         
         if (self.find ("Assignment")!= "Null"):
             #if self.find("Assignment",self.find("Assignment")+1):##ensures only one assign per line.
@@ -55,6 +55,8 @@ class TreeGen:  ##Buffer class contains all manipulation code.
         elif (self.find("Function")!= "Null"):
             root= self.data[self.find ("Function")]
             splice =  self.find ("Function")
+        elif (self.find("EOF")!= "Null"):
+            root= self.data[self.find ("EOF")]
         if splice != "Null":
             if splice>1: self.Eval(root,True,0,splice-1)
             if splice<len(self.data)-1: self.Eval(root,False,splice+1)
