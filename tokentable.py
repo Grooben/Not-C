@@ -24,8 +24,8 @@ all_syms = ['End_of_File', 'OMulti', 'ODivide','OMod', 'OAdd',
 
 #changed comparaters to "compare" rather then "Operator"
 categories = ['EOF', 'Operator', 'Operator', 'Operator', 'Operator',
-              'Operator', 'Operator', 'Compare', 'Compare', 'Compare',
-              'Compare', 'Compare', 'Compare', 'Compare', 'Assignment',
+              'Operator', 'Operator', 'Comma', 'Comma', 'Comma',
+              'Comma', 'Comma', 'Comma', 'Comma', 'Assignment',
               'Operator', 'Operator', 'Function', 'Function', 'Function', 
               'Function', 'Punctuator', 'Punctuator', 'Punctuator', 'Punctuator',
               'Punctuator','StatementTerminator','Comma','Variable','Variable',            ##comma added by peter for a unique priority in parse tree. sorry.

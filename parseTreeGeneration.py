@@ -69,7 +69,7 @@ class TreeGen:  ##Buffer class contains all manipulation code.
 
     def Eval(self, parent, ln, min=0, max= None): ##recursive eval function
         if max == None : max=len(self.data)-1
-        #print(parent, ln, min,max)
+        print(parent, ln, min,max)
 
         if (self.find("Function",min,max)!= "Null"):
             if ln: parent.lhn= self.data[self.find ("Function",min,max)]
