@@ -3,6 +3,7 @@
 # Description: Provides classes to translate program logic into assembly code. 
 
 from mods import int2str
+import bridge
 
 class String:
     strCount = 0
@@ -60,8 +61,14 @@ class ProgramCode:
     def addCall(self, asmCall):
         print("ASM: Adding call")
         for sym in asmCall.symbols:
-            print("\t\t parameter: {0}".format(sym))
+            print("\t\t parameter: {0}".format(sym.value))
         self.calls.append(asmCall)
+    def findData(self, name):
+        for d in self.data:
+            print("Log (asm): findData iteration: {0}".format(d))
+            if d == name and self.data[d].isName:
+                return self.data[d]
+        return False
     def asm(self):
         ret = ""
         self.mods = {}
@@ -77,10 +84,10 @@ class ProgramCode:
         # Add logic
         ret += "\nsection .text\nglobal _start\n_start:\n"
         for x in self.calls:
-            for s in x.symbols:
-                if s not in self.data:
-                    print("COMPILE ERROR: Symbol '{0}' referenced in source has not been found in program data!\n".format(s))
-                    return ""
+            #for s in x.symbols:
+                #if not self.findData(s.value):
+                #    print("COMPILE ERROR: Symbol '{0}' referenced in source has not been found in program data!\n".format(s.value))
+                #    return ""
             ret += x.asm(self.mods) + "\n"
         # Exit code
         ret += "\nmov eax, 1\nmov ebx, 0\nint 80h"
@@ -94,12 +101,67 @@ class SysCallPrint:
         self.symbols = paramNames
     def asm(self, reqMods=[]):
         ret = ""
+        print("Log (asm): syscallprint({0} parameters): ".format(len(self.symbols)))
         for x in self.symbols:
-            if x.find("nc_int_") == 0:
+            print("Log (asm): syscallprint({0})".format(x.value))
+            if x.value.find("nc_int_") == 0:
                 ret = ret + "{0}\n".format(reqMods["itoa"].asm(x))
             else:
-                ret = ret + "mov ecx, {0}\nmov edx, {0}_LEN\n".format(x)
+                ret = ret + "mov ecx, {0}\nmov edx, {0}_LEN\n".format(x.value)
             ret = ret + "mov eax, 4\nmov ebx, 1\nint 80h\n"
+        return ret
+
+class Core_AssignVal:
+    def __init__(self):
+        self.symbols = []
+    def asm(self):
+        ret = "mov eax, "
+        if symbols[1].isName:
+            ret += "[{0}]".format(symbols[1].value)
+        else:
+            ret += "{0}".format(symbols[1].value)
+        ret += "\nmov [{0}], eax\n".format(symbols[0].value)
+        return ret
+
+class Core_Math_Add:
+    def __init__(self):
+        self.symbols = []
+    def asm():
+        # TODO: Determine location
+        ret = "\nmov eax, {0}\nmov ebx, {1}\nadd eax, ebx\nmov [{2}], eax\n".format(symbols[0].value, symbols[1].value, resultVarName)
+        return ret
+
+# Dummy classes
+class Core_Math_Mod:
+    def __init__(self):
+        self.symbols = []
+    def asm():
+        # TODO: Determine location
+        ret = "\nmov eax, {0}\nmov ebx, {1}\nadd eax, ebx\nmov [{2}], eax\n".format(symbols[0].value, symbols[1].value, resultVarName)
+        return ret
+
+class Core_Math_Div:
+    def __init__(self):
+        self.symbols = []
+    def asm():
+        # TODO: Determine location
+        ret = "\nmov eax, {0}\nmov ebx, {1}\nadd eax, ebx\nmov [{2}], eax\n".format(symbols[0].value, symbols[1].value, resultVarName)
+        return ret
+
+class Core_Math_Sub:
+    def __init__(self):
+        self.symbols = []
+    def asm():
+        # TODO: Determine location
+        ret = "\nmov eax, {0}\nmov ebx, {1}\nadd eax, ebx\nmov [{2}], eax\n".format(symbols[0].value, symbols[1].value, resultVarName)
+        return ret
+
+class Core_Math_Mul:
+    def __init__(self):
+        self.symbols = []
+    def asm():
+        # TODO: Determine location
+        ret = "\nmov eax, {0}\nmov ebx, {1}\nadd eax, ebx\nmov [{2}], eax\n".format(symbols[0].value, symbols[1].value, resultVarName)
         return ret
 
 class ModInt2Ascii:
@@ -124,5 +186,8 @@ class ModInt2Ascii:
             "code": ""
             }
         self.internals["code"] = int2str.getAsm(self.internals["data"])
-    def asm(self, intName):
-        return "\nmov eax, [{0}]\nmov [{1}], eax\nmov [{2}], eax\ncall nc_mod_int2ascii_fnc_start".format(intName, self.internals["data"]["org"].name, self.internals["data"]["num"].name)
+    def asm(self, intData):
+        intName = "{0}".format(intData.value)
+        if intData.isName:
+            intName = "[{0}]".format(intName)
+        return "\nmov eax, {0}\nmov [{1}], eax\nmov [{2}], eax\ncall nc_mod_int2ascii_fnc_start".format(intName, self.internals["data"]["org"].name, self.internals["data"]["num"].name)

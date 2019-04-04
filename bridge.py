@@ -80,3 +80,9 @@ class Program:
     	return len(self.calls)
     def dataCount(self):
         return len(self.data)
+    def findData(self, name):
+        for d in self.data:
+            if d.name == name:
+                return True
+            else:
+                return False

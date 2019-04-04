@@ -10,7 +10,7 @@ TokenGTR, TokenGEQ, TokenEQ, TokenNeg, TokenAssign,             \
 TokenAND, TokenOR, TokenIF, TokenELSE, TokenWHILE,              \
 TokenPrint, TokenPutc, TokenLparen, TokenRparen, TokenLbrace,   \
 TokenRbrace, TokenSemi, TokenComma, TokenIdent, TokenInteger,   \
-TokenString = range(31)
+TokenString, TokenINT, TokenSTRING, TokenEOL = range(34)
 
 #Must remain the same order - do NOT change without authors permission 
 all_syms = ['End_of_File', 'OMulti', 'ODivide','OMod', 'OAdd', 
@@ -19,8 +19,18 @@ all_syms = ['End_of_File', 'OMulti', 'ODivide','OMod', 'OAdd',
             'OAnd', 'Oor', 'KeywordIF', 'KeywordELSE', 'KeywordWHILE', 
             'KeywordPRINT', 'KeywordPutc', 'LeftParen', 'RightPaaren', 'LeftBrace', 
             'RightBrace', 'SemiColon', 'Comma', 'Identifier', 'Integer', 
-            'String']
+            'String', 'KeywordInt', 'KeywordSTRING', 'EOL']
 
+
+#changed comparaters to "compare" rather then "Operator"
+categories = ['EOF', 'Operator', 'Operator', 'Operator', 'Operator',
+              'Operator', 'Operator', 'Compare', 'Compare', 'Compare',
+              'Compare', 'Compare', 'Compare', 'Compare', 'Assignment',
+              'Operator', 'Operator', 'Function', 'Function', 'Function', 
+              'Function', 'Punctuator', 'Punctuator', 'Punctuator', 'Punctuator',
+              'Punctuator','StatementTerminator','Comma','Variable','Variable',            ##comma added by peter for a unique priority in parse tree. sorry.
+              'Variable', 'Operator', 'Operator', 'EOL']
+    
 Symbols = { '{': TokenLbrace,
             '}': TokenRbrace,
             '(': TokenLparen,
@@ -37,5 +47,7 @@ keyWords = { 'if': TokenIF,
              'else':TokenELSE,
              'print': TokenPrint,
              'putc': TokenPutc,
-             'while': TokenWHILE }
+             'while': TokenWHILE, 
+             'Int': TokenINT,
+             'String': TokenSTRING}
 
