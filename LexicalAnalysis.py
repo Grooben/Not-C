@@ -70,13 +70,15 @@ def stringLit(start, errLine, errCol):
 
     grabNextCharacter()
   
-    #Add to symbol table whether an String has been decleared 
+    #Add to symbol table whether a String has been decleared 
     if tokenCount > 1:
        findtok = tokenCount - 3
 
        #Check if the token 'String' was found, if not do nothing
        if TokenArray[findtok] == 32: 
           pushToSymbolTable(Idname, 'String', text)
+       if TokenArray[findtok] == 31:
+           pushToSymbolTable(Idname, 'Int', text)
 
     bufferTokens(tokentable.TokenString)
     return tokentable.TokenString, errLine, errCol, text
@@ -106,6 +108,8 @@ def identifiersOrIntegers(errLine, errCol):
             findtok = tokenCount - 3
 
             #Check if the token 'Int' was found, if not do nothing
+            if TokenArray[findtok] == 32: 
+                pushToSymbolTable(Idname, 'String', n)
             if TokenArray[findtok] == 31: 
                 pushToSymbolTable(Idname, 'Int', n)
 
