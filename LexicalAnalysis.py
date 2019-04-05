@@ -15,6 +15,7 @@ Character = " "
 Column = 0
 Line = 1
 file = None
+endOfLine = False
 
 Idname = ""
 
@@ -26,13 +27,17 @@ tokenCount = 0
 #Once a new line is detected, the column (Character) will reset to the start of the line, and shift line.
 def grabNextCharacter():
 
-    global Character, Column, Line
+    global Character, Column, Line, endOfLine 
 
     Character = file.read(1)      
     Column += 1       
-    if Character == '\n':       
-        Line += 1
-        Column = 0
+    if Character == '\n':   
+      Line += 1 
+      Column = 0 
+      endOfLine = True 
+
+       ##SHOULD BE RETURNING TOKEN TO MAIN.PY HERE, BUT THIS IS CALLED SEVERAL TIMES WITHIN FILES ITS SELF 
+
     return Character
 
 #Function which identifies the following character after a previous character and returns the correct token, based on the parameters. 
@@ -65,13 +70,15 @@ def stringLit(start, errLine, errCol):
 
     grabNextCharacter()
   
-    #Add to symbol table whether an String has been decleared 
+    #Add to symbol table whether a String has been decleared 
     if tokenCount > 1:
        findtok = tokenCount - 3
 
        #Check if the token 'String' was found, if not do nothing
        if TokenArray[findtok] == 32: 
           pushToSymbolTable(Idname, 'String', text)
+       if TokenArray[findtok] == 31:
+           pushToSymbolTable(Idname, 'Int', text)
 
     bufferTokens(tokentable.TokenString)
     return tokentable.TokenString, errLine, errCol, text
@@ -101,6 +108,8 @@ def identifiersOrIntegers(errLine, errCol):
             findtok = tokenCount - 3
 
             #Check if the token 'Int' was found, if not do nothing
+            if TokenArray[findtok] == 32: 
+                pushToSymbolTable(Idname, 'String', n)
             if TokenArray[findtok] == 31: 
                 pushToSymbolTable(Idname, 'Int', n)
 
@@ -155,6 +164,7 @@ def bufferTokens(token):
 #Get Token function calls the grab next character function and identifies what token the character is by a series of if statements.
 def getToken():
 
+    global Character, Column, Line
     #Checks whether the character is white space or not, if true return next character. 
     while Character.isspace():      
         grabNextCharacter()

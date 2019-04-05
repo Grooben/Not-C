@@ -1,9 +1,12 @@
-Int c = 23;
+Int c = 23 + 1
 Int x = 9;
-a=a+b;
+Int e = "s"
+String d = 9
 String b = "hi";
 print(x, "\n");
 print(69);
 	if x == 9
 		print("Hello world")
 Int a = 8;
+print(x+23/3);
+print(x+1,"hi");
