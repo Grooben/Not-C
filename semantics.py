@@ -1,6 +1,6 @@
 # Author : Macauley Scullion
 
-#Import symtable functions
+#Import files
 import symtable as sym
 import errorhandling as err
 from parseTreeGeneration import Node 
