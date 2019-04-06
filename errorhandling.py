@@ -34,9 +34,19 @@ def error_dup(name, type):
     exit(1)
 
 #Error Handling for Semantic Analyser functions - Displays error message, as well as exits.
-def errornodetype(node):
-    if (isinstance(node, int)):
-        print("Error: - Sum types do not match e.g. 'int + str', etc. Please check that datatypes match.")
-    else:
-        print("Error: - Type of object, right of assignment, does not match type of object, left of the assignment, e.g. 'int = str', etc. Please check that datatypes match")
+def errornodetypeassign():
+    print("Error: - Type of object, right of assignment, does not match type of object, left of the assignment, e.g. 'int = str', etc. Please check that datatypes match.")
+    exit(1)
+
+def errornodetypesum():
+    print("Error: - Sum types do not match e.g. 'int + str', etc. Please check that datatypes match. Only Int's can be summmed.")
+    exit(1)
+
+
+def errorifcompare():
+    print("Error: - If statment does not contain a comparison. Please make sure that the if statement compares data.")
+    exit(1)
+
+def errorifnodes():
+    print("Error: - If statement comparisons are not of the same type. e.g. int == str. Please check comparison datatypes match.")
     exit(1)

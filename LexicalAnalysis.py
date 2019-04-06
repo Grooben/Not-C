@@ -22,16 +22,31 @@ Idname = ""
 #Array containing tokens, as well as number of tokens
 TokenArray = []
 tokenCount = 0
+commentGone = False
 
 #Grabs next character from the file, as well as shifting columns (Character) along everytime this function is called.
 #Once a new line is detected, the column (Character) will reset to the start of the line, and shift line.
 def grabNextCharacter():
 
-    global Character, Column, Line, endOfLine 
+    global Character, Column, Line, endOfLine, commentGone
 
     Character = file.read(1)      
-    Column += 1       
-    if Character == '\n':   
+    Column += 1    
+
+    if (Character == '\n' and commentGone == True):
+        Line += 1
+        Column = 0
+        endOfLine = False
+        print("hello")
+        commentGone = False
+        return 
+
+    if (Character == '\n' and Column == 1):
+        Line += 1
+        Column = 0
+        return 
+
+    if (Character == '\n' and Column != 1):  
       Line += 1 
       Column = 0 
       endOfLine = True 
@@ -70,13 +85,15 @@ def stringLit(start, errLine, errCol):
 
     grabNextCharacter()
   
-    #Add to symbol table whether an String has been decleared 
+    #Add to symbol table whether a String has been decleared 
     if tokenCount > 1:
        findtok = tokenCount - 3
 
        #Check if the token 'String' was found, if not do nothing
        if TokenArray[findtok] == 32: 
           pushToSymbolTable(Idname, 'String', text)
+       if TokenArray[findtok] == 31:
+           pushToSymbolTable(Idname, 'Int', text)
 
     bufferTokens(tokentable.TokenString)
     return tokentable.TokenString, errLine, errCol, text
@@ -106,6 +123,8 @@ def identifiersOrIntegers(errLine, errCol):
             findtok = tokenCount - 3
 
             #Check if the token 'Int' was found, if not do nothing
+            if TokenArray[findtok] == 32: 
+                pushToSymbolTable(Idname, 'String', n)
             if TokenArray[findtok] == 31: 
                 pushToSymbolTable(Idname, 'Int', n)
 
@@ -126,6 +145,8 @@ def identifiersOrIntegers(errLine, errCol):
 #Function which identifies whether the string is a comment as well as return the divide token.
 def commentsAndDiv(errLine, errCol):
 
+    global commentGone
+
     #If the character after '/' does not equal to a *, return token divide. 
     if grabNextCharacter() != '*':
         bufferTokens(tokentable.TokenDivide)
@@ -138,6 +159,7 @@ def commentsAndDiv(errLine, errCol):
         if Character == '*':
             if grabNextCharacter() == '/':  
                 grabNextCharacter()
+                commentGone = True
                 return getToken()
 
         elif len(Character) == 0:
