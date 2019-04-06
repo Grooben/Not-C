@@ -161,7 +161,6 @@ def ifstate(node, bool):
 def printstate(node, bool):
     print("\t Print node")
     r = eval(node.rhn, bool)
-    print(r)
     return
 
 # Type check sums, 'left' operator 'right'
