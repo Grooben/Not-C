@@ -12,6 +12,7 @@ import parseTreeGeneration as treeGen
 lex.file = open("sourceFile.txt", "r")
 Idname =""
 
+TokArrayLine = []
 Buffer = treeGen.TreeGen();#tree gen class setup.
 
 while True:
@@ -28,6 +29,7 @@ while True:
     elif token == lex.tokentable.TokenIdent: print("  %s" % (tokenStream[3])) 
     else: print("")
 
+       
     if len(tokenStream)>3:Buffer.add(lex.tokentable.categories[tokenStream[0]],lex.tokentable.translation[tokenStream[0]],tokenStream[3])     ##adds token to tree gen buffer.
     else: Buffer.add(lex.tokentable.categories[tokenStream[0]],lex.tokentable.all_syms[tokenStream[0]])
 
@@ -68,12 +70,13 @@ BELOW CODE IS JUST FOR TESTING
 
 '''
 
+
 print("\n\nGENERATED TREES: ")
 i=1
 for Node in Buffer.GeneratedTrees:
-    print ("\nLine: ",i)
-    Node.PrintTree()
-    i=i+1
+   print ("\nLine: ",i)
+   Node.PrintTree()
+   i=i+1
 
 i = 0
 for Node in Buffer.GeneratedTrees:
