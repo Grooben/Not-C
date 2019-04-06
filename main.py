@@ -7,6 +7,7 @@
 import LexicalAnalysis as lex
 import symtable
 import parseTreeGeneration as treeGen
+import semantics as sem
 
 #Reads source file
 lex.file = open("sourceFile.txt", "r")
