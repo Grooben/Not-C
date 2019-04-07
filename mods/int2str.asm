@@ -1,3 +1,5 @@
+; This is an integer-to-ASCII conversion module for the Not-C compiler.
+; Use the attached Python script to include it in the program.
 {MODNAME}start:
 xor eax, eax ; Reset values as needed
 mov [{subs}], eax
@@ -31,7 +33,7 @@ mov [{highestPow}], eax
         inc ebx
         mov [{highestExp}], ebx
         jmp {MODNAME}powFindLoop
-{MODNAME}powFindExit: 
+{MODNAME}powFindExit:
         mov edx, 0
         cmp [{strSz}], edx ; if strSz == 0 then assign a size
         jne {MODNAME}powFindAlign

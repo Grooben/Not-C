@@ -41,6 +41,7 @@ class CallData:
         self.value = value
         self.isName = isName
         self.typename = typename
+        self.checkTypes = True # This should only be used for low-level, critical data. If set to False, the compiler backend will ignore type checking on this symbol. 
 
 # Represents command calls (e.g. function calls) in the source code.
 # In assembly generation, each Call will be placed in `section .text`
@@ -72,7 +73,7 @@ class Program:
     # List of command calls
     # Each element should contain a Call object
     # calls = []
-    
+
     def __init__(self, programData = [], programCalls = []):
         self.data = programData
         self.calls = programCalls

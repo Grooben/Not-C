@@ -10,9 +10,20 @@ import parseTreeGeneration as treeGen
 
 import compile as ncCompile
 import semantics as sem
+import sys
 
-#Reads source file
-lex.file = open("sourceFile.txt", "r")
+# Reads source file, checks for arguments from commandline
+outputFilename = "output.asm"
+sourceFilename = ""
+
+if len(sys.argv) < 2:
+    print("Error (not-c): No input file provided. Usage: python3 main.py sourceFile outputFile")
+    print("\t\tsourceFile: required, input file containing code for the source program")
+    print("\t\toutputFile: optional, output file containing generated assembly code for target program. Default: output.asm")
+    exit()
+else:
+    sourceFilename = sys.argv[1]
+lex.file = open(sourceFilename, "r")
 Idname =""
 
 TokArrayLine = []
@@ -83,13 +94,15 @@ for Node in Buffer.GeneratedTrees:
 
 
 i = 0
-for Node in Buffer.GeneratedTrees:
+'''for Node in Buffer.GeneratedTrees:
     print("\nSemantic analysis for line: " , i+1)
     if Buffer.GeneratedTrees[i].type != "End_of_File":
         sem.eval(Buffer.GeneratedTrees[i], False)
-    i = i + 1
+    i = i + 1'''
 
 symtable.printTable()
 
 # Call compile.py
-ncCompile.buildProgram(Buffer.GeneratedTrees, symtable.symbol_table)
+if len(sys.argv) >= 3:
+    outputFilename = sys.argv[2]
+ncCompile.buildProgram(Buffer.GeneratedTrees, symtable.symbol_table, outputFilename)

@@ -1,10 +1,12 @@
 # asm.py
 # Author: Tom Zajac
-# Description: Provides classes to translate program logic into assembly code. 
+# Description: Provides classes to translate program logic into assembly code.
 
 from mods import int2str
 import bridge
 
+# String datatype class.
+# Used to generate assembly code for static data declaration.
 class String:
     strCount = 0
     typename = "String"
@@ -25,6 +27,8 @@ class String:
             self.data = self.data.replace("\\n", "")
         return "{0}:\tdb '{1}', {2}0\n{0}_LEN:\tequ $-{0}".format(self.name, self.data, suffix)
 
+# Integer datatype class
+# Used to generate assembly code for static data declaration.
 class Integer:
     intCount = 0
     typename = "Integer"
@@ -41,6 +45,10 @@ class Integer:
     def asm(self):
         return "{0}:\tdd {1}".format(self.name, self.data)
 
+# Buffer datatype class
+# Used to generate assembly code for static data declaration.
+# This is essentially an array of bytes.
+# TODO: This class should be refactored in the future to allow more flexibility on types (e.g. make a generic collection class)
 class ByteBuffer:
     bufCount = 0
     def __init__(self, name=None, count=1024):
@@ -52,6 +60,9 @@ class ByteBuffer:
     def asm(self):
         return "{0}:\ttimes {1} db 0, 0".format(self.name, len(self.arr))
 
+# The full program class
+# Encapsulates static data and call list from the source code
+# Returns full assembly code for the target program
 class ProgramCode:
     def __init__(self):
         self.data = {}
@@ -59,14 +70,14 @@ class ProgramCode:
     def addData(self, asmData):
         self.data[asmData.name] = asmData
     def addCall(self, asmCall):
-        print("ASM: Adding call")
+        print("Log (asm): Adding call:")
         for sym in asmCall.symbols:
             print("\t\t parameter: {0}".format(sym.value))
         self.calls.append(asmCall)
     def findData(self, name):
         for d in self.data:
             print("Log (asm): findData iteration: {0}".format(d))
-            if d == name and self.data[d].isName:
+            if d == name:
                 return self.data[d]
         return False
     def asm(self):
@@ -84,19 +95,19 @@ class ProgramCode:
         # Add logic
         ret += "\nsection .text\nglobal _start\n_start:\n"
         for x in self.calls:
-            #for s in x.symbols:
-                #if not self.findData(s.value):
-                #    print("COMPILE ERROR: Symbol '{0}' referenced in source has not been found in program data!\n".format(s.value))
-                #    return ""
+            for s in x.symbols:
+                if not self.findData(s.value):
+                    print("Error (asm): Symbol '{0}' referenced in source has not been found in program data!\n".format(s.value))
             ret += x.asm(self.mods) + "\n"
         # Exit code
         ret += "\nmov eax, 1\nmov ebx, 0\nint 80h"
         # Add modules code at the end
         for m in self.mods:
             ret += "\n" + self.mods[m].internals["code"]
+        ret = ret.replace("_!c_", "_nc_") # Exclamation marks cause NASM syntax errors, need to convert them
         return ret
 
-class SysCallPrint:
+class Core_IO_Print:
     def __init__(self, paramNames=[], reqMods=[]):
         self.symbols = paramNames
     def asm(self, reqMods=[]):
@@ -104,7 +115,7 @@ class SysCallPrint:
         print("Log (asm): syscallprint({0} parameters): ".format(len(self.symbols)))
         for x in self.symbols:
             print("Log (asm): syscallprint({0})".format(x.value))
-            if x.value.find("nc_int_") == 0:
+            if x.value.find("nc_int_var") == 0:
                 ret = ret + "{0}\n".format(reqMods["itoa"].asm(x))
             else:
                 ret = ret + "mov ecx, {0}\nmov edx, {0}_LEN\n".format(x.value)
@@ -112,65 +123,107 @@ class SysCallPrint:
         return ret
 
 class Core_AssignVal:
-    def __init__(self):
-        self.symbols = []
-    def asm(self):
+    def __init__(self, symbols=[]):
+        self.symbols = symbols
+    def asm(self, reqMods=[]):
+        print("Log (asm): core_assignval({0} parameters): ".format(len(self.symbols)))
+        for x in self.symbols:
+            print("Log (asm): core_assignval({0})".format(x.value))
         ret = "mov eax, "
-        if symbols[1].isName:
-            ret += "[{0}]".format(symbols[1].value)
+        if self.symbols[-1].isName:
+            ret += "[{0}]".format(self.symbols[-1].value)
         else:
-            ret += "{0}".format(symbols[1].value)
-        ret += "\nmov [{0}], eax\n".format(symbols[0].value)
+            ret += "{0}".format(self.symbols[-1].value)
+        ret += "\nmov [{0}], eax\n".format(self.symbols[-2].value)
         return ret
 
+class Core_Memory_SaveReg:
+    def __init__(self, symbols=[]):
+        self.symbols = symbols
+    # Returns assembly code for saving register to memory
+    def asm(self, reqMods=[]):
+        return "\nmov [{0}], {1}\n".format(self.symbols[0].value, self.symbols[1].value)
+
 class Core_Math_Add:
-    def __init__(self):
-        self.symbols = []
-    def asm():
-        # TODO: Determine location
-        ret = "\nmov eax, {0}\nmov ebx, {1}\nadd eax, ebx\nmov [{2}], eax\n".format(symbols[0].value, symbols[1].value, resultVarName)
+    def __init__(self, symbols=[]):
+        self.symbols = symbols
+    # Returns assembly code for the addition operation
+    def asm(self, reqMods=[]):
+        for s in self.symbols:
+            if s.isName:
+                s.value = "[{0}]".format(s.value) # Format the value to be a variable name in NASM syntax
+        ret = "\nmov eax, {0}\nmov ebx, {1}\nadd eax, ebx\n".format(self.symbols[0].value, self.symbols[1].value)
         return ret
+    # Returns register name for the result
+    def result(self):
+        return "eax"
 
 # Dummy classes
 class Core_Math_Mod:
-    def __init__(self):
-        self.symbols = []
-    def asm():
-        # TODO: Determine location
-        ret = "\nmov eax, {0}\nmov ebx, {1}\nadd eax, ebx\nmov [{2}], eax\n".format(symbols[0].value, symbols[1].value, resultVarName)
+    def __init__(self, symbols=[]):
+        self.symbols = symbols
+    # Returns assembly code for the modulo operation
+    def asm(self, reqMods=[]):
+        for s in self.symbols:
+            if s.isName:
+                s.value = "[{0}]".format(s.value) # Format the value to be a variable name in NASM syntax
+        ret = "\nxor edx, edx\nmov eax, {0}\nmov ebx, {1}\ncdq\nidiv ebx\n".format(self.symbols[0].value, self.symbols[1].value)
         return ret
+    # Returns register name for the result
+    def result(self):
+        return "edx"
 
 class Core_Math_Div:
-    def __init__(self):
-        self.symbols = []
-    def asm():
-        # TODO: Determine location
-        ret = "\nmov eax, {0}\nmov ebx, {1}\nadd eax, ebx\nmov [{2}], eax\n".format(symbols[0].value, symbols[1].value, resultVarName)
+    def __init__(self, symbols=[]):
+        self.symbols = symbols
+    # Returns assembly code for the division operation
+    def asm(self, reqMods=[]):
+        for s in self.symbols:
+            if s.isName:
+                s.value = "[{0}]".format(s.value) # Format the value to be a variable name in NASM syntax
+        ret = "\nmov eax, {0}\nmov ebx, {1}\ncdq\nidiv ebx\n".format(self.symbols[0].value, self.symbols[1].value)
         return ret
+    # Returns register name for the result
+    def result(self):
+        return "eax"
 
 class Core_Math_Sub:
-    def __init__(self):
-        self.symbols = []
-    def asm():
-        # TODO: Determine location
-        ret = "\nmov eax, {0}\nmov ebx, {1}\nadd eax, ebx\nmov [{2}], eax\n".format(symbols[0].value, symbols[1].value, resultVarName)
+    def __init__(self, symbols=[]):
+        self.symbols = symbols
+    # Returns assembly code for the subtraction operation
+    def asm(self, reqMods=[]):
+        for s in self.symbols:
+            if s.isName:
+                s.value = "[{0}]".format(s.value) # Format the value to be a variable name in NASM syntax
+        ret = "\nmov eax, {0}\nmov ebx, {1}\nsub eax, ebx\n".format(self.symbols[0].value, self.symbols[1].value)
         return ret
+    # Returns register name for the result
+    def result(self):
+        return "eax"
 
 class Core_Math_Mul:
-    def __init__(self):
-        self.symbols = []
-    def asm():
-        # TODO: Determine location
-        ret = "\nmov eax, {0}\nmov ebx, {1}\nadd eax, ebx\nmov [{2}], eax\n".format(symbols[0].value, symbols[1].value, resultVarName)
+    def __init__(self, symbols=[]):
+        self.symbols = symbols
+    # Returns assembly code for the multiplication operation
+    def asm(self, reqMods=[]):
+        for s in self.symbols:
+            if s.isName:
+                s.value = "[{0}]".format(s.value) # Format the value to be a variable name in NASM syntax
+        ret = "\nmov eax, {0}\nmov ebx, {1}\ncdq\nimul eax, ebx\n".format(self.symbols[0].value, self.symbols[1].value)
         return ret
+    # Returns register name for the result
+    def result(self):
+        return "eax"
 
 class ModInt2Ascii:
     # This is a module for the int2ascii algorithm.
     # The algorithm runs at run-time and
     # loads the resultant buffer pointer into ecx, and string length into edx
     def __init__(self):
+        # Internal code used by the module, remapped to its own namespace in order to separate it from user program data
         self.internals = {
-            "data": 
+            # Static data used by the module
+            "data":
                 {
                     "org": Integer(0, "nc_mod_int2ascii_org"),
                     "num": Integer(0, "nc_mod_int2ascii_num"),
@@ -183,8 +236,11 @@ class ModInt2Ascii:
                     "subs": Integer(0, "nc_mod_int2ascii_subs"),
                     "steps": Integer(0, "nc_mod_int2ascii_steps")
                 },
+            # Assembly instructions for the algorithm
+            # This should be loaded at the end of the program, and invoked using the `call` instruction.
             "code": ""
             }
+        # Retrieve the assembly code using the remapped variable names
         self.internals["code"] = int2str.getAsm(self.internals["data"])
     def asm(self, intData):
         intName = "{0}".format(intData.value)
