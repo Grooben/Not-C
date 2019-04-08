@@ -90,7 +90,7 @@ def generate(tree, symbolTable, syscalls):
                 sym = symtable.lookup(node.lhn.value)
                 if sym != False and sym.type == "Int":
                     print("Log (icg): Adding Int assign param '{0}'".format(currentNode.value))
-                    identifier = "nc_int_var_{0}".format(currentNode.rhn.value)
+                    identifier = "nc_int_var_{0}".format(sym.name)
             currentNode = node.rhn
             if currentNode.type == "Integer" or currentNode.type == "Identifier":
                 if currentNode.type == "Identifier":
