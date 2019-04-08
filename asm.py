@@ -22,7 +22,7 @@ class String:
             self.name = name
     def asm(self):
         suffix = ""
-        while self.data.find("\\n") >= 0:
+        while str(self.data).find("\\n") >= 0:
             suffix = "10, "
             self.data = self.data.replace("\\n", "")
         return "{0}:\tdb '{1}', {2}0\n{0}_LEN:\tequ $-{0}".format(self.name, self.data, suffix)
