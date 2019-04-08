@@ -1,7 +1,9 @@
-Int a = 2;
+Int a = 0;
 print(a);
+a = 2;
 Int b = 2;
-Int d = 69;
+Int c = 69;
 print("\n");
-Int c = a + b;
+c = a + b;
 print(a, " + ", b, " = ", c, "\n");
+print(c, "\n");
