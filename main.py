@@ -69,8 +69,8 @@ an empty node will return None
 
 BELOW CODE IS JUST FOR TESTING
 
-'''
 
+''' 
 
 print("\n\nGENERATED TREES: ")
 i=1
@@ -84,7 +84,7 @@ for Node in Buffer.GeneratedTrees:
     print("\nSemantic analysis for line: " , i+1)
     sem.eval(Buffer.GeneratedTrees[i], False)
     i = i + 1
-    
+   
 symtable.printTable() 
 
 
