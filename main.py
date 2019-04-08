@@ -88,6 +88,9 @@ BELOW CODE IS JUST FOR TESTING
 print("\n\nGENERATED TREES: ")
 i=1
 for Node in Buffer.GeneratedTrees:
+   if Node == None:
+       i+=1
+       continue
    print ("\nLine: ",i)
    Node.PrintTree()
    i=i+1

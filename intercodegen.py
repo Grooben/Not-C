@@ -19,6 +19,8 @@ def generate(tree, symbolTable, syscalls):
     symtable.symbol_table = symbolTable
     # Iterate through the program tree
     for node in tree:
+        if node == None:
+            continue
         print("Log (icg): Found node ({2}::{0}: {1}) in tree".format(node.type, node.value, node.catagory))
         # Check for functions
         if node.catagory == "Function" and node.type != "KeywordIF":
