@@ -108,11 +108,11 @@ def generate(tree, symbolTable, syscalls):
                 assignCall = bridge.Call("_!c_memory_savereg", [bridge.CallData("String", identifier, True), bridge.CallData("String", syscalls[mathOpName].result())]) # change call to saveregister function since the math functions don't save into memory
                 assignCall.data[0].checkTypes = False
                 if currentNode.lhn.type == "Identifier":
-                    mathCall.addData(bridge.CallData("Integer", "var_{0}".format(currentNode.lhn.value), True))
+                    mathCall.addData(bridge.CallData("Integer", "nc_int_var_{0}".format(currentNode.lhn.value), True))
                 elif currentNode.lhn.type == "Integer":
                     mathCall.addData(bridge.CallData("Integer", str(currentNode.lhn.value), False))
                 if currentNode.rhn.type == "Identifier":
-                    mathCall.addData(bridge.CallData("Integer", "var_{0}".format(currentNode.rhn.value), True))
+                    mathCall.addData(bridge.CallData("Integer", "nc_int_var_{0}".format(currentNode.rhn.value), True))
                 elif currentNode.rhn.type == "Integer":
                     mathCall.addData(bridge.CallData("Integer", str(currentNode.rhn.value), False))
                 intercode.calls.append(mathCall)
