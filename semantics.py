@@ -20,10 +20,15 @@ def eval(node):
         "String": const,
         "KeywordIF": ifstate,
         "KeywordPRINT": printstate,
-        "Comma": comma
+        "Comma": comma,
+        "End_of_File": eof
         }
     function = switcher[node.type]
     return function(node)
+
+# Dummy function for end of file
+def eof(node):
+    return
 
 # Equal function - evals right side, assigns left return value from right eval
 def equal(node):
