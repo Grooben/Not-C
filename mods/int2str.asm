@@ -2,6 +2,15 @@
 ; Use the attached Python script to include it in the program.
 {MODNAME}start:
 xor eax, eax ; Reset values as needed
+cmp [{num}], eax ; check if number is zero and return immediately if so
+jne {MODNAME}algorithm
+mov ebx, '0'
+mov [{buf}], ebx
+mov ecx, {buf}
+mov edx, 1
+xor ebx, ebx
+ret
+{MODNAME}algorithm:
 mov [{subs}], eax
 mov [{steps}], eax
 mov [{strSz}], eax
