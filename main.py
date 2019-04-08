@@ -82,8 +82,8 @@ an empty node will return None
 
 BELOW CODE IS JUST FOR TESTING
 
-'''
 
+''' 
 
 print("\n\nGENERATED TREES: ")
 i=1
@@ -97,13 +97,12 @@ for Node in Buffer.GeneratedTrees:
 
 
 i = 0
-'''for Node in Buffer.GeneratedTrees:
+for Node in Buffer.GeneratedTrees:
     print("\nSemantic analysis for line: " , i+1)
-    if Buffer.GeneratedTrees[i].type != "End_of_File":
-        sem.eval(Buffer.GeneratedTrees[i], False)
-    i = i + 1'''
-
-symtable.printTable()
+    sem.eval(Buffer.GeneratedTrees[i])
+    i = i + 1
+   
+symtable.printTable() 
 
 # Call compile.py
 if len(sys.argv) >= 3:
