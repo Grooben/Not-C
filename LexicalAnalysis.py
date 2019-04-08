@@ -92,9 +92,9 @@ def stringLit(start, errLine, errCol):
 
        #Check if the token 'String' was found, if not do nothing
        if TokenArray[findtok] == 32: 
-          pushToSymbolTable(Idname, 'String', text, Line)
+          pushToSymbolTable(Idname, 'String', Line, text)
        if TokenArray[findtok] == 31:
-           pushToSymbolTable(Idname, 'Int', text, Line)
+           pushToSymbolTable(Idname, 'Int', Line, text)
 
     bufferTokens(tokentable.TokenString)
     return tokentable.TokenString, errLine, errCol, text
@@ -125,9 +125,9 @@ def identifiersOrIntegers(errLine, errCol):
 
             #Check if the token 'Int' was found, if not do nothing
             if TokenArray[findtok] == 32: 
-                pushToSymbolTable(Idname, 'String', n, Line)
+                pushToSymbolTable(Idname, 'String', Line, n)
             if TokenArray[findtok] == 31: 
-                pushToSymbolTable(Idname, 'Int', n, Line)
+                pushToSymbolTable(Idname, 'Int', Line, n)
 
         bufferTokens(tokentable.TokenInteger)
         return tokentable.TokenInteger, errLine, errCol, n
@@ -176,8 +176,8 @@ def commentsAndDiv(errLine, errCol):
              grabNextCharacter()
 
 #Function which pushes nessceray components to the symbol table. 
-def pushToSymbolTable(name, type, value, Line):
-    symtable.insert(name, type, value, Line)
+def pushToSymbolTable(name, type, line, value):
+    symtable.insert(name, type, line, value)
 
 def bufferTokens(token):
     global TokenArray 

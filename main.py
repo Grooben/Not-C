@@ -82,11 +82,9 @@ for Node in Buffer.GeneratedTrees:
 i = 0
 for Node in Buffer.GeneratedTrees:
     print("\nSemantic analysis for line: " , i+1)
-    sem.eval(Buffer.GeneratedTrees[i], False)
+    sem.eval(Buffer.GeneratedTrees[i])
     i = i + 1
    
 symtable.printTable() 
-
-
 
 
