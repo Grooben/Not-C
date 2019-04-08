@@ -76,7 +76,7 @@ class ProgramCode:
         self.calls.append(asmCall)
     def findData(self, name):
         for d in self.data:
-            print("Log (asm): findData iteration: {0}".format(d))
+            # print("Log (asm): findData iteration: {0}".format(d))
             if d == name:
                 return self.data[d]
         return False
@@ -114,10 +114,10 @@ class Core_IO_Print:
         ret = ""
         print("Log (asm): syscallprint({0} parameters): ".format(len(self.symbols)))
         for x in self.symbols:
-            print("Log (asm): syscallprint({0})".format(x.value))
-            if x.value.find("nc_int_var") == 0:
+            print("Log (asm): syscallprint({1} {0})".format(x.value, x.typename))
+            if x.typename == "Int" or x.typename == "Integer": # TODO: Inconsistent naming
                 ret = ret + "{0}\n".format(reqMods["itoa"].asm(x))
-            else:
+            elif x.typename == "String":
                 ret = ret + "mov ecx, {0}\nmov edx, {0}_LEN\n".format(x.value)
             ret = ret + "mov eax, 4\nmov ebx, 1\nint 80h\n"
         return ret
