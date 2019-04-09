@@ -68,23 +68,26 @@ class TreeGen:  ##Buffer class contains all manipulation code.
         if max == None : max=len(self.data)-1
         print(parent, ln, min,max)
 
+        temp = None
+        variableFlag = False
+
         if (self.find("Function",min,max)!= "Null"):
-            if ln: parent.lhn= self.data[self.find ("Function",min,max)]
-            else: parent.rhn= self.data[self.find ("Function",min,max)]
-            splice =  self.find ("Function",min,max)
+            temp = self.find("Function",min,max)
         elif (self.find("Comma",min,max)!= "Null"):
-            if ln: parent.lhn= self.data[self.find ("Comma",min,max)]
-            else: parent.rhn= self.data[self.find ("Comma",min,max)]
-            splice =  self.find ("Comma",min,max)
+            temp = self.find("Comma",min,max)
         elif (self.find("Operator",min,max)!= "Null"):
-            if ln: parent.lhn= self.data[self.find ("Operator",min,max)]
-            else: parent.rhn= self.data[self.find ("Operator",min,max)]
-            splice =  self.find ("Operator",min,max)
+            temp = self.find("Operator",min,max)
         elif (self.find("Variable",min,max)!= "Null"):
-            if ln: parent.lhn= self.data[self.find ("Variable",min,max)]
-            else: parent.rhn= self.data[self.find ("Variable",min,max)]
-            return
+            temp = self.find("Variable",min,max)
+            variableFlag = True
         else : return
+
+        print(temp)
+
+        if ln: parent.lhn= self.data[temp]
+        else: parent.rhn= self.data[temp]
+        if variableFlag: return
+        splice =  temp
 
         if ln: parent = parent.lhn##rebases parent in correct node for send 
         else: parent = parent.rhn
