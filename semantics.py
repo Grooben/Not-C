@@ -1,180 +1,202 @@
 # Author : Macauley Scullion
 
-#Import symtable functions
-import symtable
-import errorhandling
+#Import files
+import symtable as sym
+import errorhandling as err
 from parseTreeGeneration import Node 
 
 # Node evaluation function - will evaluate the root node or passed node through a swither and call function, require bool for type check loop then setting loop
-def eval(node, bool):
+def eval(node, line):
     switcher = {
-        "equal": equal,
-        "addition": add,
-        "subtraction": sub,
-        "multiply": mult,
-        "divide": div,
-        "variable": var,
-        "constant": const
+        "Oassign": equal,
+        "OAdd": add,
+        "OSub": sub,
+        "OMulti": mult,
+        "ODivide": div,
+        "Identifier": var,
+        "KeywordInt": var,
+        "KeywordSTRING": var,
+        "Integer": const,
+        "String": const,
+        "KeywordIF": ifstate,
+        "KeywordPRINT": printstate,
+        "Comma": comma,
+        "End_of_File": eof
         }
     function = switcher[node.type]
-    return function(node, bool)
+    return function(node, line)
+
+# EOF function (dummy function to prevent KeyError in the switcher)
+def eof(node, line):
+    return
 
 # Equal function - evals right side, assigns left return value from right eval
-def equal(node, bool):
-    if (bool != True): 
-        # Type checking loop
-        print("type check loop")
-        l = symtable.lookup(node.lhn.value) 
-        r = eval(node.rhn, bool)
-        type_check_assign(node)
-        eval(node, True)
+def equal(node, line):
+    print("\t Equal node")
+    #Check node type for keywords, if not - lookup left node value
+    if (node.lhn.type == "KeywordInt"):
+        #print("key int")
+        l = check_lookup(node.lhn.rhn, line)
+    
+    elif (node.lhn.type == "KeywordSTRING"):
+        #print("key str")
+        l = check_lookup(node.lhn.rhn, line)
+
     else:
-        # Setting loop
-        print("set loop")
-        l = symtable.lookup(node.lhn.value) 
-        r = eval(node.rhn, True)
-        symtable.set_attribute(l, r)
-        return 
+        #print("else")
+        l = check_lookup(node.lhn, line)
+    
+    r = eval(node.rhn, line)
+    type_check_assign(node, r, line)
+    sym.set_attribute(l,r)
+    return
 
 # Add function - returns left and right addition
-def add(node, bool):
-    if (bool != True):
-        l = eval(node.lhn, bool)
-        r = eval(node.rhn, bool)
-        type_check_sum(l, r)
-        return l + r
-    else:
-        l = eval(node.lhn, bool)
-        r = eval(node.rhn, bool)
-        return (l + " + " + r)
-
+def add(node, line):
+    print("\t Add node")
+    l = eval(node.lhn, line)
+    r = eval(node.rhn, line)
+    
+    #type check 
+    type_check_sum(l, r, line)
+    return l + r
 
 # Sub function - returns left and right subtraction 
-def sub(node, bool):
-    if (bool != True):
-        l = eval(node.lhn, bool)
-        r = eval(node.rhn, bool)
-        type_check_sum(l, r)
-        return l - r
-    else:
-        l = eval(node.lhn, bool)
-        r = eval(node.rhn, bool)
-        return (l + " - " + r)
+def sub(node, line):
+    print("\t Sub node")
+    l = eval(node.lhn, line)
+    r = eval(node.rhn, line)
+    
+    #type check 
+    type_check_sum(l, r, line)
+    return l - r
 
 # mult function - returns left and right multiplication 
-def mult(node, bool):
-    if (bool != True):
-        l = eval(node.lhn, bool)
-        r = eval(node.rhn, bool)
-        type_check_sum(l, r)
-        return l * r
-    else:
-        l = eval(node.lhn, bool)
-        r = eval(node.rhn, bool)
-        return (l + " * " + r)
+def mult(node, line):
+    print("\t Multi node")
+    l = eval(node.lhn, line)
+    r = eval(node.rhn, line)
+    
+    #type check 
+    type_check_sum(l, r, line)
+    return l * r
+
 
 # div function - returns left and right division
-def div(node, bool):
-    if (bool != True):
-        l = eval(node.lhn, bool)
-        r = eval(node.rhn, bool)
-        type_check_sum(l, r)
-        return l / r
-    else:
-        l = eval(node.lhn, bool)
-        r = eval(node.rhn, bool)
-        return (l + " / " + r)
+def div(node, line):
+    print("\t Div node")
+    l = eval(node.lhn, line)
+    r = eval(node.rhn, line)
+    
+    #type check 
+    type_check_sum(l, r, line)
+    return int(l / r)
+
 
 # var function - returns variable value after lookup 
-def var(node, bool):
-    var = symtable.lookup(node.value)
-    if (bool != True):
+def var(node, line):
+    print("\t Variable node")
+    var = check_lookup(node, line)
+
+    #tyep check
+    #if type is int convert to int
+    if (var.type == 'Int'):
+        return int(var.value)
+    #if not leave as str
+    else:
         return var.value
-    else:
-        return var.name 
 
-# const function - returns the constant i.e. its name
-def const(node, bool):
-    if (bool != True):
-        return node.value
-    else:
-        return str(node.value) 
 
-# Type checking function - will check if the variables/constants being summed are of the same type
-def type_check_sum(leftnode, rightnode):  
-    if (isinstance(leftnode,int) and isinstance(rightnode,int)):
+# const function - returns the node value
+def const(node, line):
+    print("\t Constant node")
+    #return value
+    return node.value
+
+
+# comma function - evaluates left and right of print punctuation
+def comma(node, line):
+    l = eval(node.lhn, line)
+    r = eval(node.rhn, line)
+    return
+
+# If function - used to get child nodes of comparison
+def ifstate(node, line):
+    print("\t If node")
+    if (node.rhn.type == "OperationEqual"):
+        l = eval(node.rhn.lhn, line)
+        r = eval(node.rhn.rhn, line)
+        type_check_if(l,r, line)
         return
+    else:
+        err.errorifcompare(line)
+
+# Print function - used to evaluated node within print function 
+def printstate(node, line):
+    print("\t Print node")
+    r = eval(node.rhn, line)
+    return
+
+# Type check sums, 'left' operator 'right'
+def type_check_sum (left, right, line):
+    if (isinstance(left, int) and isinstance(right, int)):
+        return
+    else: 
+        #If anything other Int's are summed
+        err.errornodetypesum(line)
+
+# Type checking assignments, 'left' equals 'right'
+def type_check_assign(node, right, line):
+
+    if (node.lhn.type == "KeywordInt"):
+        #print("key int")
+        l = node.lhn.rhn
+    
+    elif (node.lhn.type == "KeywordSTRING"):
+        #print("key str")
+        l = node.lhn.rhn
 
     else:
-        errorhandling.errornodetype(1)
+        #print("else")
+        l = node.lhn
 
-# Type checking function - will check if the variables/constants being assigned are of the same type
-def type_check_assign(node):  
-    # Only if left handside is a variable otherwise run an error
-    if (node.lhn.type == 'variable'):
-        # if left and right both return a symbol, match types otherwise run error
-        if (symtable.lookup(node.lhn.value) != False and symtable.lookup(node.rhn.value) != False):
-            if ((symtable.lookup(node.lhn.value)).type == 'Int' and (symtable.lookup(node.rhn.value)).type == 'Int'):
+    if (l.type == "Identifier"):
+        if (check_lookup(l, line) != False):
+            l = check_lookup(l, line)
+            #print("sym grabbed")
+            if ((l.type == "Int") and (isinstance(right, int))):
+                #print("both int")
                 return
-
-            elif ((symtable.lookup(node.lhn.value)).type == 'Str' and (symtable.lookup(node.rhn.value)).type == 'Str'):
+            elif (l.type == "String" and isinstance(right, str)):
+                #print("both str")
                 return
-
-            else: 
-                errorhandling.errornodetype(node)
-
-        # if left returns a symbol and right is a constant, match types otherwise run error
-        elif (symtable.lookup(node.lhn.value) != False and node.rhn.type == 'constant'):
-            if ((symtable.lookup(node.lhn.value)).type == 'Int' and isinstance(node.rhn.value, int)):
-                return
-            
-            elif ((symtable.lookup(node.lhn.value)).type == 'Str' and isinstance(node.rhn.value, str)):
-                return
-
-            else: 
-                errorhandling.errornodetype(node)
-
+            else:
+                err.errornodetypeassign(line)
     else:
-        errorhandling.errornodetype(node)
+        err.errornodetypeassign(line)
 
-## Test node eval code - will have to remove all code from file to test - PLEASE DO THIS IN A SEPERATE FILE
-#symtable.insert("X", "Int", 5)
-#nodel = Node("variable", "X")
-#noder = Node("constant", 5)
-#root = Node("divide", "/", nodel, noder)
-#print(eval(root))
-#symtable.printTable()
+# Type check if - function which checks if if statement both match
+def type_check_if(left, right, line):
+    if (isinstance(left, int) and isinstance(right, int)):
+        return
+    if (isinstance(left, str) and isinstance(right, str)):
+        return
+    else: 
+        #add error explain only ints can be added
+        err.errorifnodes(line)
 
-#symtable.insert("X", "Int", 5)
-#symtable.insert("Y", "Int", 5)
-#nodel = Node("variable", "X")
-#noder = Node("variable", "Y")
-#root = Node("multiply", "*", noder, nodel)
-#print(eval(root))
+# Check lookup - function returns symbol if found, if not it'll run an error
+def check_lookup(node, line):
+    if (sym.lookup(node.value) != False):
+        symbol = sym.lookup(node.value)
+        line_check(symbol, line)
+        return symbol
+    else:
+        err.errornotdeclared(node.value, line)
 
-#symtable.insert("X", "Int", 0)
-#symtable.insert("y", "Str", 6)
-#symtable.printTable()
-#nodel = Node("variable", "X")
-#noder = Node("variable", "y")
-#root = Node("equal", "=", nodel, noder)
-#print(eval(root))
-#symtable.printTable()
-
-#symtable.insert("X", "Int", 0)
-#symtable.printTable()
-#nodel = Node("variable", "X")
-#noder = Node("variable", "y")
-#root = Node("equal", "=", nodel, noder)
-#print(eval(root))
-#symtable.printTable()
-
-#symtable.insert("X", "Int", 0)
-#symtable.insert("y", "Int", 6)
-#nodel1 = Node("variable", "X")
-#nodel2 = Node("variable", "y")
-#noder2 = Node("constant", 12)
-#noder1 = Node("addition", "+", nodel2, noder2)
-#root = Node("equal", "=", nodel1, noder1)
-#print(eval(root, False))
-#symtable.printTable()
+# Line check - checks if the variable is used before its declared 
+def line_check(symbol, line):
+    if (line < symbol.line):
+        err.errorbeforedeclared(symbol.name, line)
+    else:
+        return

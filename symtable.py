@@ -5,10 +5,11 @@ import errorhandling
 
 # Symbol class - Name, Type, and Attribute
 class Symbol:
-    def __init__(self, name, type, value = None):
+    def __init__(self, name, type, line, value = None):
         self.name = name
         self.type = type
         self.value = value
+        self.line = line
 
 # Symbol table array
 symbol_table = []
@@ -34,10 +35,10 @@ def lookup(name):
         return False
 
 # Insert - insert a name and return pointer to entry
-def insert(name, type, value = None):
+def insert(name, type, line, value = None):
     # Lookup function call to check for matches 
     if (lookup(name) == False):
-        new_entry = Symbol(name, type, value)
+        new_entry = Symbol(name, type, line, value)
         symbol_table.append(new_entry)
         print("Symbol appended: " + name + ' ' + type)
     else:
@@ -54,6 +55,6 @@ def get_attribute(sym):
 # Print Symbol table
 def printTable():
      for sym in symbol_table:
-         print("Item: \n""     Type:" + sym.type + "\n""     Name:"+ sym.name + "\n""     Value:", sym.value)
+         print("Item: \n""     Type:" + sym.type + "\n""     Name:"+ sym.name + "\n""     Value:", sym.value,  "\n""     Line:", sym.line)
     
               
