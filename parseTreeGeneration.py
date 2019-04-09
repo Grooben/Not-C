@@ -9,9 +9,10 @@ class Node:
         #self.lhn = lhn
         #self.rhn = rhn
 
-    def __init__( self,catagory, type, value= None, lhn = None, rhn = None):
+    def __init__( self,catagory, type, line, value= None, lhn = None, rhn = None):
         self.catagory = catagory
         self.type = type
+        self.line = line
         self.value = value
         self.lhn = lhn
         self.rhn = rhn
@@ -92,9 +93,9 @@ class TreeGen:  ##Buffer class contains all manipulation code.
         if splice+1<=max:self.Eval(parent,False,splice+1,max)
         
 
-    def add(self, catagory, tokenType, val = None):
+    def add(self, catagory, tokenType, line, val = None):
         #print(catagory, " ", tokenType)
-        self.data.append(Node(catagory, tokenType, val))
+        self.data.append(Node(catagory, tokenType, line, val))
         if catagory == "EOL": 
             self.GeneratedTrees.append(self.StartEval())
             
@@ -109,6 +110,5 @@ class TreeGen:  ##Buffer class contains all manipulation code.
 ##redundant class used for test adding now done withen class.
 def addNode(catagory, tokenType, val = None):
     nodeBuffer.add(catagory, tokenType, val)
-
 
 #-------------------------------------------------------------

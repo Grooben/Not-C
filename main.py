@@ -43,9 +43,8 @@ while True:
     elif token == lex.tokentable.TokenIdent: print("  %s" % (tokenStream[3]))
     else: print("")
 
-
-    if len(tokenStream)>3:Buffer.add(lex.tokentable.categories[tokenStream[0]],lex.tokentable.translation[tokenStream[0]],tokenStream[3])     ##adds token to tree gen buffer.
-    else: Buffer.add(lex.tokentable.categories[tokenStream[0]],lex.tokentable.all_syms[tokenStream[0]])
+    if len(tokenStream)>3:Buffer.add(lex.tokentable.categories[tokenStream[0]],lex.tokentable.translation[tokenStream[0]], Line, tokenStream[3])     ##adds token to tree gen buffer.
+    else: Buffer.add(lex.tokentable.categories[tokenStream[0]],lex.tokentable.all_syms[tokenStream[0]], Line)
 
     #Grabs END OF LINE Token, appends over filestream to output this.
     if lex.endOfLine == True:
@@ -53,12 +52,12 @@ while True:
         tokenStream = lex.tokentable.TokenEOL, Line, Column
         print ("%5d  %10d %-20s %-14s" % (Line, Column,lex.tokentable.categories[tokenStream[0]], lex.tokentable.all_syms[tokenStream[0]]), end='')
         print ("\n")
-        Buffer.add(lex.tokentable.categories[tokenStream[0]],lex.tokentable.all_syms[tokenStream[0]])
+        Buffer.add(lex.tokentable.categories[tokenStream[0]],lex.tokentable.all_syms[tokenStream[0]], Line)
 
     #Ends loop if 'TokenEOF' is detected.
     if token == lex.tokentable.TokenEOF:
         tokenStream = lex.tokentable.TokenEOL, Line, Column##Adds EOL token before EOL to fix EOF bug.
-        Buffer.add(lex.tokentable.categories[tokenStream[0]],lex.tokentable.all_syms[tokenStream[0]])
+        Buffer.add(lex.tokentable.categories[tokenStream[0]],lex.tokentable.all_syms[tokenStream[0]], Line)
         break
 
 #Example of printing table, remove when needed
@@ -86,20 +85,16 @@ BELOW CODE IS JUST FOR TESTING
 ''' 
 
 print("\n\nGENERATED TREES: ")
-i=1
+
 for Node in Buffer.GeneratedTrees:
-   if Node == None:
-       i+=1
-       continue
-   print ("\nLine: ",i)
+   print ("\nLine: ",Node.line)
    Node.PrintTree()
-   i=i+1
 
 
 i = 0
 for Node in Buffer.GeneratedTrees:
-    print("\nSemantic analysis for line: " , i+1)
-    sem.eval(Buffer.GeneratedTrees[i], i+1)
+    print("\nSemantic analysis for line: " , Node.line)
+    sem.eval(Buffer.GeneratedTrees[i], Node.line)
     i = i + 1
    
 symtable.printTable() 
