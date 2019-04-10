@@ -17,14 +17,12 @@ class Operations:
     # del function, that allows me to safely remove a node in the node tree,
     # this works well as the tree is built in a horizontal linear fashion.
     def remove_node(Buffer, node):
-        print("Going to delete node ", node)
+        print("Going to delete node", node)
         del Buffer.GeneratedTrees[node]
 
 class Optimisations:
     # Check for redundant Assignments
     def check_redundant_assign(Buffer, currNode):
-        print(currNode)
-        print("TEST AGAIN: ", Buffer.GeneratedTrees[currNode].type)
         if Buffer.GeneratedTrees[currNode].type == "Oassign":
             print("Will check assignment to see if it is redundant...")
             # Check to see if the left hand node and the right hand node are both identifiers
@@ -40,5 +38,7 @@ class Optimisations:
 def icOptimise(Buffer):
     currNode = 0
     for Node in Buffer.GeneratedTrees:
+        print("\nOptimising node", currNode)
         Optimisations.check_redundant_assign(Buffer, currNode)
         currNode+=1
+    print("Done optimising!\n")
