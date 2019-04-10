@@ -15,13 +15,19 @@ class Operations:
     # Removes a node that is superfluous to us
     def remove_node(Buffer, node):
         print("Yeet")
+        # Buffer.GeneratedTrees[node].pop() # This doesn't work quite yet
 
 class Optimisations:
     # Check for redundant Assignments
     def check_redundant_assign(Buffer, currNode):
         print(currNode)
-        currNode = 4
-        print("TEST AGAIN: ", type(Buffer.GeneratedTrees[currNode].lhn))
+        print("TEST AGAIN: ", Buffer.GeneratedTrees[currNode].type)
+        if Buffer.GeneratedTrees[currNode].type == "Oassign":
+            print("Will check assignment!")
+            print("Left hand: ", Buffer.GeneratedTrees[currNode].lhn.type, " Right hand: ", Buffer.GeneratedTrees[currNode].rhn.type)
+            if Buffer.GeneratedTrees[currNode].lhn.type and Buffer.GeneratedTrees[currNode].rhn.type == "Identifier":
+                print("Redundant identifier detected!")
+                Operations.remove_node(Buffer, currNode)
 
     # Check for if statements that always eval as true
 
