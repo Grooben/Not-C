@@ -4,25 +4,36 @@
 import LexicalAnalysis as lex
 import parseTreeGeneration as pT
 
-def remove_node(node):
-    print("Will Remove Node...")
+class Operations:
+    # Perform a sanity check if needed!
+    def test(Buffer):
+        print("NEW TREE:\n")
+        for Node in Buffer.GeneratedTrees:
+            print ("\nLine: ",Node.line)
+            Node.PrintTree()
+    
+    # Removes a node that is superfluous to us
+    def remove_node(Buffer, node):
+        print("Yeet")
 
-# Check for redundant Assignments
-def remove_redundant_assign():
+class Optimisations:
+    # Check for redundant Assignments
+    def check_redundant_assign(Buffer, currNode):
+        print(currNode)
+        currNode = 4
+        print("TEST AGAIN: ", type(Buffer.GeneratedTrees[currNode].lhn))
 
-    for node in tree: # Tree doesn't exist
-        if node.token[0].type == Oassign:
-            if node.token[0].value == sym.value:
-                remove_node(node)
-                
+    # Check for if statements that always eval as true
 
-# Lol most of this isn't needed now
+    #def check_always_true():
+        
 
-# Check for if statements that always eval as true
+def icOptimise(Buffer):
+    currNode = 0
+    for Node in Buffer.GeneratedTrees:
+        Optimisations.check_redundant_assign(Buffer, currNode)
+        currNode+=1
 
-def remove_always_true():
 
-    for node in tree:
-        if node.token[0].type == KeywordIF:
-            # Insert Logic to detect a If statement that always evaluates as true
-            remove_node(node)
+
+    
