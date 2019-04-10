@@ -33,6 +33,16 @@ class Optimisations:
                 if Buffer.GeneratedTrees[currNode].lhn.value is Buffer.GeneratedTrees[currNode].rhn.value:
                     print("Redundant assignment detected!")
                     Operations.remove_node(Buffer, currNode)
+    
+    def check_zero_addition(Buffer, currNode):
+        if Buffer.GeneratedTrees[currNode].type == "Oassign":
+            # This long statement checks for a single line mathematical operation
+            if Buffer.GeneratedTrees[currNode].rhn.rhn and Buffer.GeneratedTrees[currNode].rhn.lhn and not Buffer.GeneratedTrees[currNode].rhn.rhn.rhn:
+                print("Single line addition detected!")
+                if Buffer.GeneratedTrees[currNode].rhn.type == "OAdd" or Buffer.GeneratedTrees[currNode].rhn.type =="OSub":
+                    if Buffer.GeneratedTrees[currNode].rhn.rhn.value == 0 or Buffer.GeneratedTrees[currNode].rhn.lhn.value == 0:
+                        print("Zero Addition/Subtraction detected")
+                        Operations.remove_node(Buffer, currNode)
         
 # Entry point for the optimiser 
 def icOptimise(Buffer):
@@ -40,5 +50,6 @@ def icOptimise(Buffer):
     for Node in Buffer.GeneratedTrees:
         print("\nOptimising node", currNode)
         Optimisations.check_redundant_assign(Buffer, currNode)
+        Optimisations.check_zero_addition(Buffer, currNode)
         currNode+=1
     print("Done optimising!\n")
