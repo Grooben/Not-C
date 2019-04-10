@@ -6,5 +6,5 @@ x = x;
 String b = "hi";
 print(x, "\n");
 print(69);
-	if x == 9
+	if x == 10
 		print("Hello world")

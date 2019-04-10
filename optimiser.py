@@ -1,5 +1,6 @@
-# Optimiser v2 - electric bugaloo
+# Optimiser v2
 # Author: Oliver Grooby
+# Description: A python script that optimises the parse tree before intemediate code generation.
 
 import LexicalAnalysis as lex
 import parseTreeGeneration as pT
@@ -17,7 +18,6 @@ class Operations:
     # this works well as the tree is built in a horizontal linear fashion.
     def remove_node(Buffer, node):
         print("Going to delete node ", node)
-        print(type(Buffer.GeneratedTrees))
         del Buffer.GeneratedTrees[node]
 
 class Optimisations:
@@ -29,9 +29,14 @@ class Optimisations:
             print("Will check assignment to see if it is redundant...")
             # Check to see if the left hand node and the right hand node are both identifiers
             if Buffer.GeneratedTrees[currNode].lhn.type and Buffer.GeneratedTrees[currNode].rhn.type == "Identifier":
-                print("Redundant identifier detected!")
-                Operations.remove_node(Buffer, currNode)
+                # This statement checks to see if the assingment is truly redundant, the above statement checks
+                # to see if both node types are Identifiers, thus meaninging something like x=a; would
+                # be bypassed, when it shouldn't be...
+                if Buffer.GeneratedTrees[currNode].lhn.value is Buffer.GeneratedTrees[currNode].rhn.value:
+                    print("Redundant assignment detected!")
+                    Operations.remove_node(Buffer, currNode)
         
+# Entry point for the optimiser 
 def icOptimise(Buffer):
     currNode = 0
     for Node in Buffer.GeneratedTrees:
