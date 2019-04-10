@@ -1,17 +1,21 @@
 section .data
-nc_int_var_c:	dd 0
-nc_int_var_x:	dd 0
 nc_int_var_a:	dd 0
-nc_str_var_b:	db 'hi', 0
-nc_str_var_b_LEN:	equ $-nc_str_var_b
-_const__nc_assign_1:	dd 23
-_const__nc_assign_2:	dd 9
-_const__nc_assign_3:	dd 8
-_const_print_4:	db '', 10, 0
-_const_print_4_LEN:	equ $-_const_print_4
-_const_print_5:	dd 69
-_const_print_6:	db 'Hello world', 0
-_const_print_6_LEN:	equ $-_const_print_6
+nc_int_var_b:	dd 0
+nc_int_var_c:	dd 0
+_const__nc_assign_1:	dd 0
+_const__nc_assign_2:	dd 2
+_const__nc_assign_3:	dd 2
+_const__nc_assign_4:	dd 69
+_const_print_5:	db '', 10, 0
+_const_print_5_LEN:	equ $-_const_print_5
+_const_print_7:	db ' + ', 0
+_const_print_7_LEN:	equ $-_const_print_7
+_const_print_8:	db ' = ', 0
+_const_print_8_LEN:	equ $-_const_print_8
+_const_print_9:	db '', 10, 0
+_const_print_9_LEN:	equ $-_const_print_9
+_const_print_10:	db '', 10, 0
+_const_print_10_LEN:	equ $-_const_print_10
 nc_mod_int2ascii_org:	dd 0
 nc_mod_int2ascii_num:	dd 0
 nc_mod_int2ascii_buf:	times 1024 db 0, 0
@@ -28,30 +32,10 @@ section .text
 global _start
 _start:
 mov eax, [_const__nc_assign_1]
-mov [nc_int_var_c], eax
-
-mov eax, [_const__nc_assign_2]
-mov [nc_int_var_x], eax
-
-mov eax, [_const__nc_assign_3]
 mov [nc_int_var_a], eax
 
 
-mov eax, [nc_int_var_x]
-mov [nc_mod_int2ascii_org], eax
-mov [nc_mod_int2ascii_num], eax
-call nc_mod_int2ascii_fnc_start
-mov eax, 4
-mov ebx, 1
-int 80h
-mov ecx, _const_print_4
-mov edx, _const_print_4_LEN
-mov eax, 4
-mov ebx, 1
-int 80h
-
-
-mov eax, [_const_print_5]
+mov eax, [nc_int_var_a]
 mov [nc_mod_int2ascii_org], eax
 mov [nc_mod_int2ascii_num], eax
 call nc_mod_int2ascii_fnc_start
@@ -59,8 +43,79 @@ mov eax, 4
 mov ebx, 1
 int 80h
 
-mov ecx, _const_print_6
-mov edx, _const_print_6_LEN
+mov eax, [_const__nc_assign_2]
+mov [nc_int_var_a], eax
+
+mov eax, [_const__nc_assign_3]
+mov [nc_int_var_b], eax
+
+mov eax, [_const__nc_assign_4]
+mov [nc_int_var_c], eax
+
+mov ecx, _const_print_5
+mov edx, _const_print_5_LEN
+mov eax, 4
+mov ebx, 1
+int 80h
+
+
+mov eax, [nc_int_var_a]
+mov ebx, [nc_int_var_b]
+add eax, ebx
+
+
+mov [nc_int_var_c], eax
+
+
+mov eax, [nc_int_var_a]
+mov [nc_mod_int2ascii_org], eax
+mov [nc_mod_int2ascii_num], eax
+call nc_mod_int2ascii_fnc_start
+mov eax, 4
+mov ebx, 1
+int 80h
+mov ecx, _const_print_7
+mov edx, _const_print_7_LEN
+mov eax, 4
+mov ebx, 1
+int 80h
+
+mov eax, [nc_int_var_b]
+mov [nc_mod_int2ascii_org], eax
+mov [nc_mod_int2ascii_num], eax
+call nc_mod_int2ascii_fnc_start
+mov eax, 4
+mov ebx, 1
+int 80h
+mov ecx, _const_print_8
+mov edx, _const_print_8_LEN
+mov eax, 4
+mov ebx, 1
+int 80h
+
+mov eax, [nc_int_var_c]
+mov [nc_mod_int2ascii_org], eax
+mov [nc_mod_int2ascii_num], eax
+call nc_mod_int2ascii_fnc_start
+mov eax, 4
+mov ebx, 1
+int 80h
+mov ecx, _const_print_9
+mov edx, _const_print_9_LEN
+mov eax, 4
+mov ebx, 1
+int 80h
+
+
+mov eax, [nc_int_var_c]
+mov [nc_mod_int2ascii_org], eax
+mov [nc_mod_int2ascii_num], eax
+call nc_mod_int2ascii_fnc_start
+mov eax, 4
+mov ebx, 1
+int 80h
+mov ecx, _const_print_10
+mov edx, _const_print_10_LEN
 mov eax, 4
 mov ebx, 1
 int 80h

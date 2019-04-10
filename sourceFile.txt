@@ -1,10 +1,14 @@
 Int c = 23;
 Int x = 9;
 Int a = 8;
-
+x = x;
+print(x, "\n");
+x = a + c;
+print(x, "\n");
+x = c - 2;
 
 String b = "hi";
 print(x, "\n");
 print(69);
-	if x == 9
+	if x == 10
 		print("Hello world")

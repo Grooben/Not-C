@@ -7,7 +7,7 @@
 import LexicalAnalysis as lex
 import symtable
 import parseTreeGeneration as treeGen
-
+import optimiser as icOpt
 import compile as ncCompile
 import semantics as sem
 import sys
@@ -98,6 +98,8 @@ for Node in Buffer.GeneratedTrees:
     i = i + 1
    
 symtable.printTable() 
+
+icOpt.icOptimise(Buffer)
 
 # Call compile.py
 if len(sys.argv) >= 3:
