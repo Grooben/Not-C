@@ -1,0 +1,10 @@
+Int a = 0;
+print(a);
+a = 2;
+Int b = 2;
+Int c = 69;
+print("\n");
+c = a + b;
+c = c - 0;
+print(a, " + ", b, " = ", c, "\n");
+print(c, "\n");
