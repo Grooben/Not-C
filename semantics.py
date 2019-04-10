@@ -6,7 +6,7 @@ import errorhandling as err
 from parseTreeGeneration import Node 
 
 # Node evaluation function - will evaluate the root node or passed node through a swither and call function, require bool for type check loop then setting loop
-def eval(node, bool):
+def eval(node, line):
     switcher = {
         "Oassign": equal,
         "OAdd": add,
@@ -20,159 +20,133 @@ def eval(node, bool):
         "String": const,
         "KeywordIF": ifstate,
         "KeywordPRINT": printstate,
-        "Comma": comma
+        "Comma": comma,
+        "End_of_File": eof
         }
     function = switcher[node.type]
-    return function(node, bool)
+    return function(node, line)
+
+# EOF function (dummy function to prevent KeyError in the switcher)
+def eof(node, line):
+    return
 
 # Equal function - evals right side, assigns left return value from right eval
-def equal(node, bool):
+def equal(node, line):
     print("\t Equal node")
     #Check node type for keywords, if not - lookup left node value
     if (node.lhn.type == "KeywordInt"):
         #print("key int")
-        l = sym.lookup(node.lhn.rhn.value)
+        l = check_lookup(node.lhn.rhn, line)
     
     elif (node.lhn.type == "KeywordSTRING"):
         #print("key str")
-        l = sym.lookup(node.lhn.rhn.value)
+        l = check_lookup(node.lhn.rhn, line)
 
     else:
         #print("else")
-        l = sym.lookup(node.lhn.value)
+        l = check_lookup(node.lhn, line)
     
-    #bool for type checking loop check
-    if (bool != True):
-        r = eval(node.rhn, bool)
-        type_check_assign(node, r)
-        eval(node , True)
-
-    #String symbol value assignment loop
-    else:
-        r = eval(node.rhn, bool)
-        sym.set_attribute(l,r)
+    r = eval(node.rhn, line)
+    type_check_assign(node, r, line)
+    sym.set_attribute(l,r)
     return
 
 # Add function - returns left and right addition
-def add(node, bool):
+def add(node, line):
     print("\t Add node")
-    l = eval(node.lhn, bool)
-    r = eval(node.rhn, bool)
+    l = eval(node.lhn, line)
+    r = eval(node.rhn, line)
     
     #type check 
-    if (bool != True):
-        type_check_sum(l, r)
-        return l + r
-
-    #string return
-    else:
-        return (l + " + " + r)
+    type_check_sum(l, r, line)
+    return l + r
 
 # Sub function - returns left and right subtraction 
-def sub(node, bool):
+def sub(node, line):
     print("\t Sub node")
-    l = eval(node.lhn, bool)
-    r = eval(node.rhn, bool)
-
-    #type check
-    if (bool != True):
-        type_check_sum(l, r)
-        return l - r
-
-    #string return
-    else:
-        return (l + " - " + r)
+    l = eval(node.lhn, line)
+    r = eval(node.rhn, line)
+    
+    #type check 
+    type_check_sum(l, r, line)
+    return l - r
 
 # mult function - returns left and right multiplication 
-def mult(node, bool):
+def mult(node, line):
     print("\t Multi node")
-    l = eval(node.lhn, bool)
-    r = eval(node.rhn, bool)
+    l = eval(node.lhn, line)
+    r = eval(node.rhn, line)
+    
+    #type check 
+    type_check_sum(l, r, line)
+    return l * r
 
-    #type check
-    if (bool != True):
-        type_check_sum(l, r)
-        return l * r
-
-    #string return
-    else:
-        return (l + " * " + r)
 
 # div function - returns left and right division
-def div(node, bool):
+def div(node, line):
     print("\t Div node")
-    l = eval(node.lhn, bool)
-    r = eval(node.rhn, bool)
+    l = eval(node.lhn, line)
+    r = eval(node.rhn, line)
+    
+    #type check 
+    type_check_sum(l, r, line)
+    return int(l / r)
 
-    #type check
-    if (bool != True):
-        type_check_sum(l, r)
-        return int(l / r)
-
-    #string return
-    else:
-        return (l + " / " + r)
 
 # var function - returns variable value after lookup 
-def var(node, bool):
+def var(node, line):
     print("\t Variable node")
-    var = sym.lookup(node.value)
+    var = check_lookup(node, line)
 
     #tyep check
-    if (bool != True):
-        #if type is int convert to int
-        if (var.type == 'Int'):
-            return int(var.value)
-        #if not leave as str
-        else:
-            return var.value
-    # string return
+    #if type is int convert to int
+    if (var.type == 'Int'):
+        return int(var.value)
+    #if not leave as str
     else:
-        return var.name 
+        return var.value
+
 
 # const function - returns the node value
-def const(node, bool):
+def const(node, line):
     print("\t Constant node")
     #return value
-    if (bool != True):
-        return node.value
-    #string return
-    else:
-        return str(node.value) 
+    return node.value
+
 
 # comma function - evaluates left and right of print punctuation
-def comma(node, bool):
-    l = eval(node.lhn, bool)
-    r = eval(node.rhn, bool)
+def comma(node, line):
+    l = eval(node.lhn, line)
+    r = eval(node.rhn, line)
     return
 
 # If function - used to get child nodes of comparison
-def ifstate(node, bool):
+def ifstate(node, line):
     print("\t If node")
     if (node.rhn.type == "OperationEqual"):
-        l = eval(node.rhn.lhn, bool)
-        r = eval(node.rhn.rhn, bool)
-        type_check_if(l,r)
+        l = eval(node.rhn.lhn, line)
+        r = eval(node.rhn.rhn, line)
+        type_check_if(l,r, line)
         return
     else:
-        err.errorifcompare()
+        err.errorifcompare(line)
 
-# 
-def printstate(node, bool):
+# Print function - used to evaluated node within print function 
+def printstate(node, line):
     print("\t Print node")
-    r = eval(node.rhn, bool)
+    r = eval(node.rhn, line)
     return
 
 # Type check sums, 'left' operator 'right'
-def type_check_sum (left, right):
+def type_check_sum (left, right, line):
     if (isinstance(left, int) and isinstance(right, int)):
         return
     else: 
         #If anything other Int's are summed
-        err.errornodetypesum()
+        err.errornodetypesum(line)
 
 # Type checking assignments, 'left' equals 'right'
-def type_check_assign(node, right):
+def type_check_assign(node, right, line):
 
     if (node.lhn.type == "KeywordInt"):
         #print("key int")
@@ -187,10 +161,9 @@ def type_check_assign(node, right):
         l = node.lhn
 
     if (l.type == "Identifier"):
-        if (sym.lookup(l.value) != False):
-            l = sym.lookup(l.value)
+        if (check_lookup(l, line) != False):
+            l = check_lookup(l, line)
             #print("sym grabbed")
-            print(l.value)
             if ((l.type == "Int") and (isinstance(right, int))):
                 #print("both int")
                 return
@@ -198,16 +171,32 @@ def type_check_assign(node, right):
                 #print("both str")
                 return
             else:
-                err.errornodetypeassign()
+                err.errornodetypeassign(line)
     else:
-        err.errornodetypeassign()
+        err.errornodetypeassign(line)
 
-
-def type_check_if(left, right):
+# Type check if - function which checks if if statement both match
+def type_check_if(left, right, line):
     if (isinstance(left, int) and isinstance(right, int)):
         return
     if (isinstance(left, str) and isinstance(right, str)):
         return
     else: 
         #add error explain only ints can be added
-        err.errorifnodes()
+        err.errorifnodes(line)
+
+# Check lookup - function returns symbol if found, if not it'll run an error
+def check_lookup(node, line):
+    if (sym.lookup(node.value) != False):
+        symbol = sym.lookup(node.value)
+        line_check(symbol, line)
+        return symbol
+    else:
+        err.errornotdeclared(node.value, line)
+
+# Line check - checks if the variable is used before its declared 
+def line_check(symbol, line):
+    if (line < symbol.line):
+        err.errorbeforedeclared(symbol.name, line)
+    else:
+        return

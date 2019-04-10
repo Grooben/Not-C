@@ -1,7 +1,7 @@
 Int c = 23 + 1
 Int x = 9;
-Int e = "s"
-String d = 9
+Int e = "s";
+String d = 9;
 
 String b = "hi";
 print(x, "\n");
