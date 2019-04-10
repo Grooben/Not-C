@@ -15,7 +15,8 @@ class Operations:
     # Removes a node that is superfluous to us
     def remove_node(Buffer, node):
         print("Yeet")
-        # Buffer.GeneratedTrees[node].pop() # This doesn't work quite yet
+        print(type(Buffer.GeneratedTrees))
+        del Buffer.GeneratedTrees[node] # This doesn't work quite yet
 
 class Optimisations:
     # Check for redundant Assignments
@@ -39,7 +40,3 @@ def icOptimise(Buffer):
     for Node in Buffer.GeneratedTrees:
         Optimisations.check_redundant_assign(Buffer, currNode)
         currNode+=1
-
-
-
-    

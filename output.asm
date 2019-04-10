@@ -36,9 +36,6 @@ mov [nc_int_var_x], eax
 mov eax, [_const__nc_assign_3]
 mov [nc_int_var_a], eax
 
-mov eax, [x]
-mov [nc_int_var_x], eax
-
 
 mov eax, [nc_int_var_x]
 mov [nc_mod_int2ascii_org], eax
