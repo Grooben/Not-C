@@ -97,7 +97,7 @@ def generate(tree, symbolTable, syscalls):
             if currentNode.type == "Integer" or currentNode.type == "Identifier":
                 if currentNode.type == "Identifier":
                     print("Log (icg): Adding assign param '{0}'".format(currentNode.value))
-                    intercode.calls.append(bridge.Call("_!c_assign", [bridge.CallData("Integer", identifier, True), bridge.CallData("Integer", str(currentNode.value), True)]))
+                    intercode.calls.append(bridge.Call("_!c_assign", [bridge.CallData("Integer", identifier, True), bridge.CallData("Integer", "nc_int_var_{0}".format(str(currentNode.value)), True)]))
                     intercode.calls[-1].data[0].checkTypes = intercode.calls[-1].data[1].checkTypes = False
                 else:
                     print("Log (icg): Adding assign param '{0}'".format(currentNode.value))
@@ -107,6 +107,7 @@ def generate(tree, symbolTable, syscalls):
                 mathOpName = currentNode.type[1:].lower() # this gets rid of the 'O' and converts to lowercase
                 mathOpName = "_!c_math_{0}".format(mathOpName)
                 mathCall = bridge.Call(mathOpName)
+                mathCall.data = []
                 assignCall = bridge.Call("_!c_memory_savereg", [bridge.CallData("String", identifier, True), bridge.CallData("String", syscalls[mathOpName].result())]) # change call to saveregister function since the math functions don't save into memory
                 assignCall.data[0].checkTypes = False
                 if currentNode.lhn.type == "Identifier":
