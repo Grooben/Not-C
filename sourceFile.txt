@@ -1,6 +1,8 @@
 Int c = 23;
 Int x = 9;
-a=a+b;
+Int a = 8;
+
+
 String b = "hi";
 print(x, "\n");
 print(69);
