@@ -64,6 +64,7 @@ class ByteBuffer:
 # Encapsulates static data and call list from the source code
 # Returns full assembly code for the target program
 class ProgramCode:
+    conditionalInEffect = None
     def __init__(self):
         self.data = {}
         self.calls = []
@@ -94,12 +95,23 @@ class ProgramCode:
             ret += self.data[x].asm() + "\n"
         # Add logic
         ret += "\nsection .text\nglobal _start\n_start:\n"
+        inCondition = True # Is the current call affected by the conditional?
         for x in self.calls:
+            if ProgramCode.conditionalInEffect == None:
+                inCondition = False
             for s in x.symbols:
                 if not self.findData(s.value):
                     print("Error (asm): Symbol '{0}' referenced in source has not been found in program data!\n".format(s.value))
             ret += x.asm(self.mods) + "\n"
-        # Exit code
+            if ProgramCode.conditionalInEffect != None and inCondition == True:
+                ret += "\n{0}:\n".format(ProgramCode.conditionalInEffect)
+                ProgramCode.conditionalInEffect = None
+            elif ProgramCode.conditionalInEffect != None:
+                inCondition = True
+        # Exit code (still put post-if label)
+        if ProgramCode.conditionalInEffect != None:
+            ret += "\n{0}:\n".format(ProgramCode.conditionalInEffect)
+            ProgramCode.conditionalInEffect = None
         ret += "\nmov eax, 1\nmov ebx, 0\nint 80h"
         # Add modules code at the end
         for m in self.mods:
@@ -144,6 +156,7 @@ class Core_Memory_SaveReg:
     def asm(self, reqMods=[]):
         return "\nmov [{0}], {1}\n".format(self.symbols[0].value, self.symbols[1].value)
 
+# Arithmetic operations
 class Core_Math_Add:
     def __init__(self, symbols=[]):
         self.symbols = symbols
@@ -158,7 +171,6 @@ class Core_Math_Add:
     def result(self):
         return "eax"
 
-# Dummy classes
 class Core_Math_Mod:
     def __init__(self, symbols=[]):
         self.symbols = symbols
@@ -215,6 +227,7 @@ class Core_Math_Mul:
     def result(self):
         return "eax"
 
+# Compiler modules
 class ModInt2Ascii:
     # This is a module for the int2ascii algorithm.
     # The algorithm runs at run-time and
@@ -247,3 +260,36 @@ class ModInt2Ascii:
         if intData.isName:
             intName = "[{0}]".format(intName)
         return "\nmov eax, {0}\nmov [{1}], eax\nmov [{2}], eax\ncall nc_mod_int2ascii_fnc_start".format(intName, self.internals["data"]["org"].name, self.internals["data"]["num"].name)
+
+# If statement handling
+class Core_Condition_Check:
+    # This class represents an if condition block.
+    # A condition map with each possible condition and its opposite
+    conditionMap = { "e": "ne", "ge": "l", "le": "g" }
+    ifCount = 0
+    def __init__(self, symbols=[]):
+        self.symbols = symbols
+        self.id = Core_Condition_Check.ifCount
+        Core_Condition_Check.ifCount += 1
+    def _getOpposite(self, condition):
+        for x in self.conditionMap:
+            if condition == x:
+                return self.conditionMap[x]
+            elif condition == self.conditionMap[x]:
+                return x
+    def asm(self, reqMods=[]):
+        ret = "\nmov eax, "
+        if self.symbols[0].isName:
+            ret += "[{0}]".format(self.symbols[0].value)
+        else:
+            ret += "{0}".format(self.symbols[0].value)
+        ret += "\nmov edx, "
+        if self.symbols[2].isName:
+            ret += "[{0}]".format(self.symbols[2].value)
+        else:
+            ret += "{0}".format(self.symbols[2].value)
+
+        ret += "\ncmp eax, edx"
+        ProgramCode.conditionalInEffect = "_nc_if{0}_Post".format(self.id)
+        ret += "\nj{0} {1}\n".format(self._getOpposite(self.symbols[1].value[self.symbols[1].value.rfind("_")+1:]), ProgramCode.conditionalInEffect)
+        return ret

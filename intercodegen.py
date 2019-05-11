@@ -121,4 +121,42 @@ def generate(tree, symbolTable, syscalls):
                 intercode.calls.append(mathCall)
                 intercode.calls.append(bridge.Call("_!c_memory_savereg", [bridge.CallData("Integer", identifier, True), bridge.CallData("String", syscalls[mathOpName].result(), False)]))
                 intercode.calls[-1].data[0].checkTypes = intercode.calls[-1].data[1].checkTypes = False
+        if node.type == "KeywordIF":
+            print("Info (icg): Found IF statement")
+            # TODO: Determine lh, condition and rh
+            lh = None
+            condition = None
+            rh = None
+
+            if node.rhn.lhn.type == "Identifier":
+                if symtable.lookup(node.rhn.lhn.value).type == "Int":
+                    identifier = "nc_int_var_{0}".format(node.rhn.lhn.value)
+                    lh = bridge.CallData("Integer", identifier, True)
+            elif node.rhn.lhn.type == "Integer":
+                lh = bridge.CallData("Integer", node.rhn.lhn.value, False)
+
+            if node.rhn.type == "OperationEqual":
+                condition = "e"
+            elif node.rhn.type == "ONotequal":
+                conditon = "ne"
+            elif node.rhn.type == "OLess":
+                condition = "l"
+            elif node.rhn.type == "OLessequal":
+                condition = "le"
+            elif node.rhn.type == "OGreater":
+                condition = "g"
+            elif node.rhn.type == "OperationGreaterequal":
+                condition = "ge"
+
+            if node.rhn.rhn.type == "Identifier":
+                if symtable.lookup(node.rhn.rhn.value).type == "Int":
+                    identifier = "nc_int_var_{0}".format(node.rhn.rhn.value)
+                    rh = bridge.CallData("Integer", identifier, True)
+            elif node.rhn.rhn.type == "Integer":
+                rh = bridge.CallData("Integer", node.rhn.rhn.value, False)
+
+            if lh == None or condition == None or rh == None:
+                print("Error (icg): Invalid if statement! ({0} {1} {2}".format(lh, condition, rh))
+                return intercode
+            intercode.calls.append(bridge.Call("_!c_condition_check", [lh, bridge.CallData("Integer", condition, True), rh]))
     return intercode

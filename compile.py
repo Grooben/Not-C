@@ -19,7 +19,8 @@ def buildProgram(tree, symbolTable, outFile = "output.asm"):
         "_!c_math_sub": asm.Core_Math_Sub(),
         "_!c_math_divide": asm.Core_Math_Div(),
         "_!c_math_multi": asm.Core_Math_Mul(),
-        "_!c_memory_savereg": asm.Core_Memory_SaveReg()
+        "_!c_memory_savereg": asm.Core_Memory_SaveReg(),
+        "_!c_condition_check": asm.Core_Condition_Check()
         }
 
     print("Log (compile): Beginning compilation. Generating intermediate code...")
@@ -95,12 +96,6 @@ def buildProgram(tree, symbolTable, outFile = "output.asm"):
         outputProg.addCall(syscall)
         print("Log (compile): Added syscall for {0} command with {1} symbols.".format(x.command, len(syscall.symbols)))
 
-    # TODO: Remove as this is handled by caller
-    # Use provided filename or use default
-    #if len(sys.argv) > 2:
-    #        outputFilename = sys.argv[2]
-    #else:
-    #        outputFilename = "output.asm"
     outputFilename = outFile
 
     resultAsm = outputProg.asm()
